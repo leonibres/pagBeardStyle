@@ -1,5 +1,5 @@
 <template>
-  <section class="nosotros-section">
+  <section id="details" class="nosotros-section">
     <div class="container">
       <div class="row" style="margin-top: 2.5rem;">
         <div class="col-lg-6 col-xl-5">

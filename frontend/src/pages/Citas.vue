@@ -197,13 +197,13 @@ export default {
   methods: {
     async cargarCitas() {
       try {
-        const token = localStorage.getItem('token');
-        const res = await axiosInstance.get('/api/appointments', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        this.citas = res.data;
-      } catch (e) {
-        this.mostrarNotificacion('Error al cargar citas');
+        console.log('📋 Cargando citas del usuario...');
+        const response = await axiosInstance.get('/api/citas');
+        this.citas = response.data;
+        console.log('✅ Citas cargadas:', this.citas);
+      } catch (error) {
+        console.error('❌ Error al cargar citas:', error);
+        this.mostrarNotificacion('Error al cargar las citas');
       }
     },
     formatFecha(fecha) {
@@ -246,21 +246,33 @@ export default {
     },
     async crearCita() {
       try {
-        const token = localStorage.getItem('token');
-        await axiosInstance.post('/api/appointments', { ...this.form }, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        this.mostrarNotificacion('Cita creada correctamente');
-        this.cerrarFormulario();
-        this.cargarCitas();
-      } catch (e) {
-        this.mostrarNotificacion(e.response?.data?.message || 'Error al crear cita');
+        const citaData = {
+          servicio_id: parseInt(this.form.servicio),
+          fecha: this.form.fecha,
+          hora: this.form.hora,
+          comentario: this.form.comentario || ""
+        };
+        
+        console.log('📝 Creando cita:', citaData);
+        const response = await axiosInstance.post('/citas', citaData);
+        
+        if (response.data?.message) {
+          this.mostrarNotificacion(response.data.message, 'success');
+          await this.cargarCitas();
+          this.cerrarFormulario();
+        }
+      } catch (error) {
+        console.error('❌ Error:', error);
+        this.mostrarNotificacion(
+          error.response?.data?.detail || 'Error al crear la cita',
+          'error'
+        );
       }
     },
     async actualizarCita() {
       try {
         const token = localStorage.getItem('token');
-        await axiosInstance.patch(`/api/appointments/${this.editId}`, { ...this.form }, {
+        await axiosInstance.patch(`/api/citas/${this.editId}`, { ...this.form }, {
           headers: { Authorization: `Bearer ${token}` }
         });
         this.mostrarNotificacion('Cita actualizada correctamente');
@@ -280,7 +292,7 @@ export default {
     async eliminarCitaConfirmada() {
       try {
         const token = localStorage.getItem('token');
-        await axiosInstance.delete(`/api/appointments/${this.citaAEliminar._id}`, {
+        await axiosInstance.delete(`/api/citas/${this.citaAEliminar._id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         this.mostrarNotificacion('Cita eliminada correctamente');

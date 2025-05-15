@@ -37,6 +37,9 @@ Consulta la [Referencia de Configuración](https://cli.vuejs.org/config/) para p
 
 ## Estructura del Proyecto
 
+> **NOTA:** Todos los estilos globales y de secciones principales deben definirse en `src/assets/styles/global.css` usando la convención `.contacto-section`, `.servicio-section`, `.faq-section`, etc.  
+> No dupliques reglas en `public/assets/css/styles.css`.
+
 ### Archivos Principales
 
 #### `src/App.vue`
@@ -85,6 +88,146 @@ El archivo `App.vue` incluye estilos personalizados para:
 - Modales (`login-modal`, `modal-container`, etc.).
 - Barra de navegación (`navbar-collapse`, `navbar-toggler`, etc.).
 - Footer (`footer`, `#myBtn`).
+
+---
+
+## Requisitos para conectar el frontend y el backend
+
+1. **Backend corriendo**
+   - Ejecuta el backend con:
+     ```bash
+     uvicorn app.main:app --reload
+     ```
+   - El backend debe estar disponible en `http://localhost:8000`.
+
+2. **Frontend corriendo**
+   - Ejecuta el frontend con:
+     ```bash
+     npm run serve
+     ```
+   - El frontend estará en `http://localhost:8080`.
+
+3. **CORS habilitado en el backend**
+   - En `main.py` debe estar configurado:
+     ```python
+     app.add_middleware(
+         CORSMiddleware,
+         allow_origins=["*"],  # O ["http://localhost:8080"]
+         allow_credentials=True,
+         allow_methods=["*"],
+         allow_headers=["*"],
+     )
+     ```
+
+4. **Proxy configurado en el frontend**
+   - En `vue.config.js` debe estar:
+     ```javascript
+     devServer: {
+       proxy: {
+         '^/clientes': {
+           target: 'http://localhost:8000',
+           changeOrigin: true,
+         },
+         '^/citas': {
+           target: 'http://localhost:8000',
+           changeOrigin: true,
+         }
+       }
+     }
+     ```
+
+5. **Rutas de API correctas en el frontend**
+   - Usa rutas relativas en axios/fetch, por ejemplo:
+     ```javascript
+     axios.post('/clientes/login', {...})
+     axios.get('/citas', {...})
+     ```
+   - No incluyas el host ni `/api`.
+
+6. **Ambos servidores deben estar activos**
+   - Si uno no está corriendo, la conexión fallará.
+
+7. **No tener errores de red ni de CORS**
+   - Si ves "Network Error" o errores CORS, revisa los puntos anteriores.
+
+---
+
+# Solución al error "Network Error" entre frontend y backend
+
+1. **Verifica que el backend esté corriendo**
+   - Ejecuta:
+     ```bash
+     python -m uvicorn app.main:app --reload
+     ```
+   - Debes ver en la terminal:  
+     `Uvicorn running on http://127.0.0.1:8000`  
+     o  
+     `Uvicorn running on http://localhost:8000`
+
+2. **Verifica que el frontend esté corriendo**
+   - Ejecuta:
+     ```bash
+     npm run serve
+     ```
+   - Accede a `http://localhost:8080` en tu navegador.
+
+3. **Prueba el backend directamente**
+   - Abre en tu navegador:  
+     [http://localhost:8000/docs](http://localhost:8000/docs)  
+   - Si no carga, el backend no está funcionando.
+
+4. **Verifica el proxy en `vue.config.js`**
+   - Debe estar así:
+     ```javascript
+     devServer: {
+       proxy: {
+         '^/clientes': {
+           target: 'http://localhost:8000',
+           changeOrigin: true,
+         },
+         '^/citas': {
+           target: 'http://localhost:8000',
+           changeOrigin: true,
+         }
+       }
+     }
+     ```
+
+5. **Verifica las rutas en el frontend**
+   - Usa rutas relativas en axios:
+     ```javascript
+     axios.post('/clientes/register', {...})
+     axios.post('/clientes/login', {...})
+     axios.get('/citas', {...})
+     ```
+   - No incluyas `http://localhost:8000` en las rutas si usas el proxy.
+
+6. **Verifica CORS en el backend**
+   - En `main.py` debe estar:
+     ```python
+     app.add_middleware(
+         CORSMiddleware,
+         allow_origins=["*"],
+         allow_credentials=True,
+         allow_methods=["*"],
+         allow_headers=["*"],
+     )
+     ```
+
+7. **Reinicia ambos servidores después de cualquier cambio**
+
+8. **Si el error persiste:**
+   - Abre la consola del navegador y revisa el mensaje exacto.
+   - Abre la terminal donde ejecutas el backend y revisa si hay errores.
+   - Prueba el endpoint manualmente desde [http://localhost:8000/docs](http://localhost:8000/docs).
+
+---
+
+**Resumen:**  
+- Ambos servidores deben estar activos y sin errores.
+- El proxy y CORS deben estar correctamente configurados.
+- Usa rutas relativas en el frontend.
+- Si el backend no responde en `/docs`, primero soluciona eso.
 
 ---
 

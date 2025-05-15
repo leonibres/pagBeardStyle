@@ -12,15 +12,17 @@ import EstiloperfectSection from "../sections/EstiloperfectSection.vue" // Secci
 import NosotrosSection from "../sections/NosotrosSection.vue" // Sección de nosotros
 import ServicioSection from "../sections/servicioSection.vue" // Usa el nombre exacto del archivo
 import EnfoqueSection from "../sections/EnfoqueSection.vue"   // Sección de enfoque
+import TestimonioSection from "../sections/TestimonioSection.vue" // Sección de testimonios
 </script>
 
 <template>
   <!-- Renderiza las secciones principales en orden -->
   <HeroSection />
-  <ContactoSection />
-  <EstiloperfectSection />
   <ServicioSection />
-  <FaqSection />
+  <EstiloperfectSection />
   <EnfoqueSection />
-  <NosotrosSection />   
+  <NosotrosSection />
+  <ContactoSection />
+  <FaqSection />
+  <TestimonioSection />
 </template>

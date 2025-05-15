@@ -2,7 +2,7 @@
   <section id="services" class="servicio-section">
     <div class="container">
       <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-12" style="margin-top: 2.5rem;">          
           <h2 class="section-title">Nuestros Servicios</h2>
           <p class="section-subtitle text-center">
             Descubre los servicios que ofrecemos para cuidar tu estilo y apariencia.

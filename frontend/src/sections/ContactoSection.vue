@@ -2,7 +2,7 @@
   <section id="contact" class="form-1">
     <div class="container">
       <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-6" style="margin-top: 2.5rem;">
           <div class="text-container">
             <div class="section-title">Contáctanos</div>
             <h2>Reserva o consulta tu cita</h2>
@@ -34,7 +34,7 @@
             </ul>
           </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-6" style="margin-top: 2.5rem;">
           <form>
             <div class="form-group">
               <input type="text" class="form-control-input" placeholder="Nombre" required />

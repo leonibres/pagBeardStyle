@@ -1,7 +1,7 @@
 <template>
-  <section id="details" class="basic-1">
+  <section id="details" class="enfoque-section">
     <div class="container">
-      <div class="row">
+      <div class="row" style="margin-top: 2.5rem;">
         <div class="col-lg-6 col-xl-7">
           <div class="image-container">
             <img class="img-fluid" src="assets/images/details-1.png" alt="Servicios destacados" />

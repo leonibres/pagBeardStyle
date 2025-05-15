@@ -1,4 +1,9 @@
 <template>
+  <!--
+    NOTA: Este componente utiliza únicamente clases definidas en
+    public/assets/css/styles.css, el cual se carga globalmente desde index.html.
+    No agregues ni dupliques estilos aquí.
+  -->
   <header id="header" class="header">
     <div class="container">
       <div class="row align-items-center">
@@ -25,7 +30,7 @@
         </div>
         <div class="col-lg-6 col-xl-7">
           <div class="image-container">
-            <img class="img-fluid" src="assets/images/header-image.png" alt="Barbero profesional trabajando" />
+            <img class="img-fluid" src="/assets/images/header-image.png" alt="Barbero profesional trabajando" />
           </div>
         </div>
       </div>

@@ -19,7 +19,7 @@
             <router-link class="nav-link" :to="{ path: '/', hash: '#services' }">Servicios</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/citas">Citas</router-link>
+            <a class="nav-link" href="#" @click.prevent="handleCitasClick">Citas</a>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" :to="{ path: '/', hash: '#details' }">Nosotros</router-link>
@@ -43,12 +43,34 @@
           </li>
         </ul>
 
-        <button
-          class="btn-hero-solid"
-          @click="openLoginModal"
-        >
-          <i class="fas fa-sign-in-alt me-2"></i>Acceder
-        </button>
+        <!-- Botón de acceso o menú de usuario -->
+        <div v-if="!isAuthenticated">
+          <button
+            class="btn-hero-solid"
+            style="padding: 0.5rem 1.2rem; font-size: 0.98rem; min-width: unset;"
+            @click="openLoginModal"
+          >
+            <i class="fas fa-sign-in-alt me-2"></i>Acceder
+          </button>
+        </div>
+        <div v-else class="dropdown">
+          <button 
+            class="btn-hero-solid dropdown-toggle"
+            style="padding: 0.5rem 1.2rem; font-size: 0.98rem;"
+            type="button"
+            id="userMenuButton"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="fas fa-user me-2"></i>{{ userData.nombre }}
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuButton">
+            <li><a class="dropdown-item" href="/perfil">Mi Perfil</a></li>
+            <li><a class="dropdown-item" href="/mis-citas">Mis Citas</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#" @click.prevent="handleLogout">Cerrar Sesión</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </nav>
@@ -114,12 +136,20 @@
         
         <form v-if="authActiveTab === 'register'" @submit.prevent="handleAuthRegister" class="auth-modal-form">
           <div class="auth-form-group">
-            <label for="auth-register-name">Nombre Completo</label>
-            <input id="auth-register-name" type="text" v-model="authRegister.name" required placeholder="Juan Pérez">
+            <label for="auth-register-nombre">Nombre</label>
+            <input id="auth-register-nombre" type="text" v-model="authRegister.nombre" required placeholder="Juan">
+          </div>
+          <div class="auth-form-group">
+            <label for="auth-register-apellido">Apellido</label>
+            <input id="auth-register-apellido" type="text" v-model="authRegister.apellido" required placeholder="Pérez">
           </div>
           <div class="auth-form-group">
             <label for="auth-register-email">Correo Electrónico</label>
             <input id="auth-register-email" type="email" v-model="authRegister.email" required placeholder="tu@email.com">
+          </div>
+          <div class="auth-form-group">
+            <label for="auth-register-phone">Teléfono</label>
+            <input id="auth-register-phone" type="tel" v-model="authRegister.telefono" required placeholder="Ej: 3001234567">
           </div>
           <div class="auth-form-group">
             <label for="auth-register-password">Contraseña</label>
@@ -143,6 +173,8 @@
 </template>
 
 <script>
+import axiosInstance from '../axiosConfig';
+
 export default {
   name: 'NavBar',
   data() {
@@ -151,19 +183,50 @@ export default {
       isDropdownOpen: false,
       showAuthModal: false,
       authActiveTab: 'login',
+      isLoading: false,
+      isAuthenticated: false,
+      userData: null,
       authLogin: {
         email: '',
         password: '',
         remember: false
       },
       authRegister: {
-        name: '',
+        nombre: '',
+        apellido: '',
         email: '',
+        telefono: '',
         password: '',
         confirmPassword: '',
         terms: false
-      }
+      },
+      showLoginMessage: false,
+      showRestrictedModal: false
     };
+  },
+  created() {
+    this.checkAuthStatus();
+    window.addEventListener('auth-check', this.checkAuthStatus);
+    window.addEventListener('show-restricted', () => {
+      if (!this.isAuthenticated) {
+        this.showRestrictedModal = true;
+      }
+    });
+  },
+  mounted() {
+    window.addEventListener('open-login-modal', this.openLoginModal);
+    
+    // Manejar scroll a secciones cuando se carga una URL con hash
+    if (this.$route.hash) {
+      this.scrollToSection(this.$route.hash);
+    }
+  },
+  beforeUnmount() {
+    window.removeEventListener('open-login-modal', this.openLoginModal);
+    window.removeEventListener('auth-check', this.checkAuthStatus);
+    window.removeEventListener('show-restricted', () => {
+      this.showRestrictedModal = true;
+    });
   },
   methods: {
     toggleNavbar() {
@@ -173,31 +236,251 @@ export default {
       this.isDropdownOpen = !this.isDropdownOpen;
     },
     openLoginModal() {
-      this.showAuthModal = true;
-      document.body.style.overflow = 'hidden';
+      if (!this.isAuthenticated) {
+        this.showRestrictedModal = false;
+        this.showAuthModal = true;
+        this.showLoginMessage = true;
+        this.authActiveTab = 'login';
+        document.body.style.overflow = 'hidden';
+      }
     },
     closeAuthModal() {
       if (!this.showAuthModal) return;
       this.showAuthModal = false;
+      this.showLoginMessage = false;
       document.body.style.overflow = '';
     },
-    handleAuthLogin() {
-      // Lógica para iniciar sesión
-      console.log('Login data:', this.authLogin);
-      // Aquí iría la llamada a tu API
-      this.closeAuthModal();
+    checkAuthStatus() {
+      console.log('🔍 Verificando estado de autenticación en Header');
+      const token = localStorage.getItem('token');
+      const userDataStr = localStorage.getItem('userData');
+      
+      console.log('Token encontrado:', !!token);
+      console.log('UserData encontrado:', !!userDataStr);
+
+      try {
+        const userData = JSON.parse(userDataStr);
+        this.isAuthenticated = true;
+        this.userData = userData;
+        console.log('✅ Usuario autenticado:', {
+          nombre: userData.nombre,
+          email: userData.email
+        });
+        return true;
+      } catch (error) {
+        console.error('❌ Error al parsear userData:', error);
+        this.handleLogout();
+        return false;
+      }
     },
-    handleAuthRegister() {
-      // Lógica para registrar
+    scrollToSection(hash) {
+      // Cerrar el navbar si está abierto
+      this.isNavbarOpen = false;
+      
+      // Esperar un momento para asegurar que el DOM esté listo
+      setTimeout(() => {
+        const element = document.querySelector(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    },
+    async handleAuthLogin() {
+      try {
+        this.isLoading = true;
+        console.log('🔑 Iniciando proceso de login...');
+
+        const response = await axiosInstance.post("/api/clientes/login", {
+          email: this.authLogin.email,
+          password: this.authLogin.password
+        });
+
+        console.log('📨 Respuesta del servidor:', {
+          status: response.status,
+          tieneToken: !!response.data.token,
+          tieneData: !!response.data.data
+        });
+
+        // Verificar y guardar el token
+        const token = response.data.token;
+        const clienteData = response.data.data?.cliente || response.data.cliente || response.data;
+
+        if (!token) {
+          throw new Error('No se recibió el token del servidor');
+        }
+
+        // Limpiar cualquier dato de autenticación anterior
+        localStorage.removeItem('token');
+        localStorage.removeItem('userData');
+
+        console.log('💾 Guardando datos en localStorage...');
+        // Guardar datos en localStorage
+        localStorage.setItem("token", token);
+        localStorage.setItem("userData", JSON.stringify(clienteData));
+        
+        // Actualizar estado
+        this.isAuthenticated = true;
+        this.userData = clienteData;
+
+        console.log('✅ Login exitoso:', {
+          isAuthenticated: this.isAuthenticated,
+          userData: this.userData
+        });
+
+        // Cerrar modales
+        this.showRestrictedModal = false;
+        this.showAuthModal = false;
+        this.showLoginMessage = false;
+        document.body.style.overflow = '';
+
+        // Manejar redirección
+        const intendedPath = sessionStorage.getItem('intendedPath');
+        console.log('🔄 Ruta pendiente:', intendedPath);
+        
+        if (intendedPath) {
+          console.log('➡️ Intentando redirección a:', intendedPath);
+          sessionStorage.removeItem('intendedPath');
+          
+          // Usar window.location.href para forzar la navegación
+          window.location.href = intendedPath;
+        } else {
+          // Si no hay ruta pendiente, ir a citas por defecto
+          window.location.href = '/citas';
+        }
+
+      } catch (error) {
+        console.error('❌ Error en login:', error.response || error);
+        let errorMessage = "Error al iniciar sesión";
+
+        if (error.response?.data) {
+          errorMessage = error.response.data.detail || error.response.data.message || error.response.data;
+        }
+
+        // Limpiar datos de autenticación en caso de error
+        localStorage.removeItem('token');
+        localStorage.removeItem('userData');
+        this.isAuthenticated = false;
+        this.userData = null;
+
+        alert(errorMessage);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    async handleAuthRegister() {
       if (this.authRegister.password !== this.authRegister.confirmPassword) {
         alert('Las contraseñas no coinciden');
         return;
       }
-      console.log('Register data:', this.authRegister);
-      // Aquí iría la llamada a tu API
-      this.closeAuthModal();
+      if (!this.authRegister.terms) {
+        alert('Debes aceptar los términos y condiciones');
+        return;
+      }
+
+      const registroData = {
+        nombre: this.authRegister.nombre,
+        apellido: this.authRegister.apellido,
+        email: this.authRegister.email,
+        telefono: this.authRegister.telefono,
+        password: this.authRegister.password
+      };
+
+      try {
+        this.isLoading = true;
+        const response = await axiosInstance.post("/api/clientes/register", registroData);
+        this.handleRegisterSuccess(response);
+      } catch (error) {
+        this.handleAuthError(error, "register");
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    handleRegisterSuccess(response) {
+      console.log('Registro exitoso:', response.data);
+      alert("¡Registro completado! Por favor inicia sesión.");
+      
+      this.authRegister = {
+        nombre: '',
+        apellido: '',
+        email: '',
+        telefono: '',
+        password: '',
+        confirmPassword: '',
+        terms: false
+      };
+      
+      this.authActiveTab = "login";
+    },
+    handleAuthError(error, action) {
+      console.error(`Error en ${action}:`, error);
+      
+      let errorMessage = {
+        login: "Error al iniciar sesión",
+        register: "Error al registrar usuario"
+      }[action];
+
+      if (error.response) {
+        if (error.response.data && error.response.data.detail) {
+          errorMessage = error.response.data.detail;
+        } else if (error.response.data && typeof error.response.data === 'string') {
+          errorMessage = error.response.data;
+        } else {
+          const statusHandlers = {
+            400: () => "Datos inválidos",
+            401: () => "Credenciales incorrectas",
+            409: () => "El correo electrónico ya está registrado",
+            500: () => "Error interno del servidor"
+          };
+          errorMessage = statusHandlers[error.response.status]?.() || errorMessage;
+        }
+      } else if (error.request) {
+        errorMessage = "No se pudo conectar con el servidor";
+      }
+
+      alert(errorMessage);
+    },
+    handleLogout() {
+      console.log('Cerrando sesión...');
+      localStorage.removeItem("token");
+      localStorage.removeItem("userData");
+      sessionStorage.removeItem('intendedPath');
+      
+      this.isAuthenticated = false;
+      this.userData = null;
+      
+      console.log('Sesión cerrada');
+      this.$router.push("/");
+    },
+    async handleCitasClick() {
+      console.log('🎯 Click en Citas');
+      this.isNavbarOpen = false;
+      
+      try {
+        if (this.isAuthenticated) {
+          console.log('✅ Usuario autenticado, navegando a /citas');
+          // Forzar la navegación usando location.href
+          window.location.href = '/citas';
+        } else {
+          console.log('❌ Usuario no autenticado, mostrando modal de login');
+          sessionStorage.setItem('intendedPath', '/citas');
+          this.showAuthModal = true;
+          this.authActiveTab = 'login';
+          document.body.style.overflow = 'hidden';
+        }
+      } catch (error) {
+        console.error('Error al navegar:', error);
+        // Intentar navegación alternativa
+        window.location.href = '/citas';
+      }
+    }
+  },
+  watch: {
+    '$route'(to) {
+      // Manejar scroll cuando cambia el hash en la ruta
+      if (to.hash) {
+        this.scrollToSection(to.hash);
+      }
     }
   }
 };
 </script>
-

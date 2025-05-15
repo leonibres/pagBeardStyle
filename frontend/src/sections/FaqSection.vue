@@ -1,7 +1,7 @@
 <template>
   <section id="faq" class="faq-section">
     <div class="container">
-      <div class="row">
+      <div class="row" style="margin-top: 2.5rem;">
         <div class="col-xl-12 text-center">
           <h2 class="section-title">Preguntas Frecuentes</h2>
           <p class="section-subtitle">

@@ -1,7 +1,7 @@
 <template>
-  <section class="basic-2">
+  <section class="nosotros-section">
     <div class="container">
-      <div class="row">
+      <div class="row" style="margin-top: 2.5rem;">
         <div class="col-lg-6 col-xl-5">
           <div class="text-container">
             <div class="section-title">Sobre Nosotros</div>

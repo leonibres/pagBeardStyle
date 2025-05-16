@@ -231,13 +231,13 @@ export default {
     },
     abrirFormularioEditarCita(cita) {
       this.editando = true;
-      this.editId = cita._id;
+      this.editId = cita.id || cita._id;
       this.form = {
-        servicio: cita.servicio,
-        fecha: cita.fecha ? cita.fecha.slice(0, 10) : '',
-        hora: cita.hora,
+        servicio: cita.service || cita.servicio,
+        fecha: cita.date ? cita.date.slice(0, 10) : (cita.fecha ? cita.fecha.slice(0, 10) : ''),
+        hora: cita.date ? cita.date.slice(11, 16) : (cita.hora || ''),
         comentario: cita.comentario || '',
-        estado: cita.estado || 'pendiente'
+        estado: cita.status || cita.estado || 'pendiente'
       };
       this.showForm = true;
     },
@@ -256,7 +256,6 @@ export default {
         await this.cargarCitas();
         this.cerrarFormulario();
       } catch (error) {
-        // Mostrar mensaje de error real del backend si existe
         let msg = 'Error al crear la cita';
         if (error.response && error.response.data) {
           if (typeof error.response.data === 'string') {
@@ -276,9 +275,8 @@ export default {
     async actualizarCita() {
       try {
         const citaData = {
-          servicio: this.form.servicio,
+          service: this.form.servicio,
           date: `${this.form.fecha}T${this.form.hora}`,
-          comentario: this.form.comentario || "",
           status: this.form.estado
         };
         await appointmentService.update(this.editId, citaData);

@@ -1,301 +1,580 @@
 # BeardStyle-Web
 
-**BeardStyle-Web** es una página web diseñada para la barbería "Beard & Style". Su objetivo es proporcionar una experiencia interactiva y moderna para los usuarios, permitiéndoles explorar servicios, reservar citas, conocer más sobre la barbería y contactarse fácilmente.
+**BeardStyle-Web** es una aplicación web para la barbería "Beard & Style", desarrollada con Vue.js (frontend) y Django REST Framework (backend). Permite a los usuarios registrarse, iniciar sesión, gestionar citas, y visualizar información relevante sobre la barbería.
 
 ---
 
-## Configuración del Proyecto
+## Tabla de Contenidos
 
-### Instalación de Dependencias
-
-Para instalar las dependencias necesarias, ejecuta el siguiente comando:
-
-```bash
-npm install
-```
-
-### Compilación y Recarga Automática para Desarrollo
-
-Para iniciar un servidor de desarrollo con recarga automática, utiliza:
-
-```bash
-npm run serve
-```
-
-### Compilación y Minificación para Producción
-
-Para compilar el proyecto para producción, ejecuta:
-
-```bash
-npm run build
-```
-
-### Linter y Corrección de Archivos
-
-Para ejecutar el linter y corregir problemas de estilo automáticamente:
-
-```bash
-npm run lint
-```
-
-### Personalización de Configuración
-
-Consulta la [Referencia de Configuración](https://cli.vuejs.org/config/) para personalizar la configuración del proyecto.
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Componentes y Secciones](#componentes-y-secciones)
+- [Funcionalidades Principales](#funcionalidades-principales)
+- [Gestión de Usuarios y Superusuario](#gestión-de-usuarios-y-superusuario)
+- [Pruebas con Postman](#pruebas-con-postman)
+- [Configuración y Ejecución](#configuración-y-ejecución)
+- [Notas de Seguridad y Producción](#notas-de-seguridad-y-producción)
+- [Detalle de la Lógica y Componentes](#detalle-de-la-lógica-y-componentes)
+- [Flujo de Autenticación y Sesión](#flujo-de-autenticación-y-sesión)
+- [Rutas y Navegación](#rutas-y-navegación)
+- [Documentación Detallada de la API - Backend](#documentación-detallada-de-la-api---backend-beardstyle)
+- [Créditos](#créditos)
 
 ---
 
 ## Estructura del Proyecto
 
-> **NOTA:** Todos los estilos globales y de secciones principales deben definirse en `src/assets/styles/global.css` usando la convención `.contacto-section`, `.servicio-section`, `.faq-section`, etc.  
-> No dupliques reglas en `public/assets/css/styles.css`.
-
-### Archivos Principales
-
-#### `src/App.vue`
-
-Este archivo contiene la estructura principal de la aplicación, incluyendo:
-
-- Barra de navegación.
-- Modales de inicio de sesión y registro.
-- Secciones como servicios, reserva, preguntas frecuentes, testimonios, contacto y footer.
-
-#### `src/components/ReserveBlock.vue`
-
-Componente reutilizable para gestionar la sección de reservas.
-
-#### `public/assets/js/bootstrap.min.js`
-
-Archivo comprimido de Bootstrap 5, utilizado para estilos y componentes interactivos.
-
----
-
-## Funcionalidades Clave
-
-### Barra de Navegación
-
-- **Responsiva**: Se adapta a dispositivos móviles y de escritorio.
-- **Menú desplegable**: Incluye opciones adicionales como términos y condiciones, políticas de privacidad, etc.
-- **Botón de inicio de sesión**: Abre un modal para iniciar sesión.
-
-### Modales
-
-- **Inicio de Sesión**: Permite a los usuarios iniciar sesión con su correo electrónico y contraseña.
-- **Registro**: Permite a los usuarios registrarse proporcionando su nombre, correo y contraseña.
-
-### Secciones
-
-1. **Inicio**: Presenta el lema y la misión de la barbería.
-2. **Servicios**: Muestra los servicios ofrecidos como cortes de cabello, arreglo de barba y tratamientos capilares.
-3. **Reserva**: Incluye un componente reutilizable para gestionar reservas.
-4. **Nosotros**: Explica la filosofía y experiencia de la barbería.
-5. **Preguntas Frecuentes**: Responde a las dudas comunes de los clientes.
-6. **Testimonios**: Muestra opiniones de clientes satisfechos.
-7. **Contacto**: Proporciona un formulario para consultas y detalles de contacto.
-
-### Footer
-
-- Incluye enlaces a redes sociales y un botón para volver al inicio de la página.
+```text
+pagBeardStyle/
+├── backend/
+│   ├── barber_app/
+│   ├── barbershop/
+│   └── manage.py
+├── frontend/
+│   ├── src/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   ├── layouts/
+│   │   ├── pages/
+│   │   ├── sections/
+│   │   ├── views/
+│   │   ├── router/
+│   │   ├── services/
+│   │   └── composables/
+│   ├── public/
+│   └── README.md
+```
 
 ---
 
-## Estilos Personalizados
+## Componentes y Secciones
 
-El archivo `App.vue` incluye estilos personalizados para:
+### Layouts
 
-- Botones (`btn-login`, `btn-solid-lg`, etc.).
-- Modales (`login-modal`, `modal-container`, etc.).
-- Barra de navegación (`navbar-collapse`, `navbar-toggler`, etc.).
-- Footer (`footer`, `#myBtn`).
+- **Header.vue**  
+  Barra de navegación principal. Muestra enlaces a las secciones, acceso/login y menú de usuario autenticado.
 
----
+  - Lógica: Cambia el menú según el estado de autenticación (`useAuth`).
+  - Permite navegación a rutas protegidas y públicas.
 
-## Requisitos para conectar el frontend y el backend
+- **footer.vue**  
+  Pie de página con enlaces a redes sociales, botón para volver arriba y créditos.
 
-> **IMPORTANTE:** Si usas autenticación basada en sesión/cookies, asegúrate de que:
->
-> - Las cookies tengan `SameSite=None` y `Secure` en producción.
-> - El frontend siempre envíe el token CSRF en las peticiones POST (ver método `getCookie` en Login.vue).
-> - El backend acepte credenciales cruzadas (`credentials: include` en fetch/axios).
+### Pages
 
-1. **Backend corriendo**
+- **Citas.vue**  
+  Panel principal para gestión de citas del usuario autenticado.
 
-   - Ejecuta el backend con:
-     ```bash
-     uvicorn app.main:app --reload
-     ```
-   - El backend debe estar disponible en `http://localhost:8000`.
+  - Permite crear, editar y eliminar citas.
+  - Muestra notificaciones de éxito/error.
+  - Lógica: Usa `appointmentService` para interactuar con la API.
 
-2. **Frontend corriendo**
+- **Appointments.vue**  
+  (Solo admin) Visualiza todas las citas del sistema.
 
-   - Ejecuta el frontend con:
-     ```bash
-     npm run serve
-     ```
-   - El frontend estará en `http://localhost:8080`.
+- **MyAppointments.vue**  
+  Muestra solo las citas del usuario autenticado.
+  - Permite editar y cancelar citas propias.
 
-3. **CORS habilitado en el backend**
+### Views
 
-   - En `main.py` debe estar configurado:
-     ```python
-     app.add_middleware(
-         CORSMiddleware,
-         allow_origins=["*"],  # O ["http://localhost:8080"]
-         allow_credentials=True,
-         allow_methods=["*"],
-         allow_headers=["*"],
-     )
-     ```
+- **Login.vue**  
+  Formulario de inicio de sesión.
 
-4. **Proxy configurado en el frontend**
+  - Lógica: Usa el composable `useAuth` para login.
+  - Al iniciar sesión, redirige a la ruta protegida deseada.
+  - Maneja errores de autenticación y muestra mensajes claros.
 
-   - En `vue.config.js` debe estar:
-     ```javascript
-     devServer: {
-       proxy: {
-         '^/clientes': {
-           target: 'http://localhost:8000',
-           changeOrigin: true,
-         },
-         '^/citas': {
-           target: 'http://localhost:8000',
-           changeOrigin: true,
-         }
-       }
-     }
-     ```
+- **Register.vue**  
+  Formulario de registro de usuario.
 
-5. **Rutas de API correctas en el frontend**
+  - Valida contraseñas.
+  - Llama a `authService.register`.
+  - Redirige a login tras registro exitoso.
 
-   - Usa rutas relativas en axios/fetch, por ejemplo:
-     ```javascript
-     axios.post('/clientes/login', {...})
-     axios.get('/citas', {...})
-     ```
-   - No incluyas el host ni `/api`.
+- **EditAppointment.vue**  
+  Edición avanzada de una cita específica (usada en rutas tipo `/edit-appointment/:id`).
 
-6. **Ambos servidores deben estar activos**
+### Sections
 
-   - Si uno no está corriendo, la conexión fallará.
-
-7. **No tener errores de red ni de CORS**
-   - Si ves "Network Error" o errores CORS, revisa los puntos anteriores.
+- **HeroSection.vue**  
+  Sección principal de bienvenida con branding y llamado a la acción.
+- **ServicioSection.vue**  
+  Lista y descripción de servicios ofrecidos.
+- **EstiloperfectSection.vue**  
+  Llamado a la acción para reservar cita.
+- **EnfoqueSection.vue**  
+  Filosofía y enfoque de la barbería.
+- **NosotrosSection.vue**  
+  Historia y valores de la empresa.
+- **FaqSection.vue**  
+  Preguntas frecuentes.
+- **ContactoSection.vue**  
+  Formulario de contacto y datos de la barbería.
+- **TestimonioSection.vue**  
+  Testimonios de clientes.
 
 ---
 
-# Solución al error "Network Error" entre frontend y backend
+## Funcionalidades Principales
 
-1. **Verifica que el backend esté corriendo**
+- **Registro de usuario:**  
+  Permite crear una cuenta con nombre, apellido, email y contraseña.  
+  Valida que el email no esté registrado y que las contraseñas coincidan.
 
-   - Ejecuta:
-     ```bash
-     python -m uvicorn app.main:app --reload
-     ```
-   - Debes ver en la terminal:  
-     `Uvicorn running on http://127.0.0.1:8000`  
-     o  
-     `Uvicorn running on http://localhost:8000`
+- **Inicio de sesión:**  
+  Autenticación con email y contraseña.  
+  Manejo de sesión vía cookies y almacenamiento de datos del usuario en localStorage.
 
-2. **Verifica que el frontend esté corriendo**
+- **Gestión de citas:**
 
-   - Ejecuta:
-     ```bash
-     npm run serve
-     ```
-   - Accede a `http://localhost:8080` en tu navegador.
+  - Crear cita: Selecciona servicio, fecha, hora y estado.
+  - Editar cita: Modifica los datos de una cita existente.
+  - Eliminar cita: Borra una cita del sistema.
+  - Solo el usuario autenticado puede ver y gestionar sus citas.
 
-3. **Prueba el backend directamente**
+- **Protección de rutas:**  
+  Solo usuarios autenticados pueden acceder a la gestión de citas y rutas protegidas.  
+  Si no hay sesión, se redirige automáticamente a `/login`.
 
-   - Abre en tu navegador:  
-     [http://localhost:8000/docs](http://localhost:8000/docs)
-   - Si no carga, el backend no está funcionando.
+- **Navegación reactiva:**  
+  El menú cambia automáticamente según el estado de autenticación.
 
-4. **Verifica el proxy en `vue.config.js`**
+- **Formulario de contacto:**  
+  Permite enviar mensajes a la barbería (puedes conectar con backend o solo mostrar info).
 
-   - Debe estar así:
-     ```javascript
-     devServer: {
-       proxy: {
-         '^/clientes': {
-           target: 'http://localhost:8000',
-           changeOrigin: true,
-         },
-         '^/citas': {
-           target: 'http://localhost:8000',
-           changeOrigin: true,
-         }
-       }
-     }
-     ```
-
-5. **Verifica las rutas en el frontend**
-
-   - Usa rutas relativas en axios:
-     ```javascript
-     axios.post('/clientes/register', {...})
-     axios.post('/clientes/login', {...})
-     axios.get('/citas', {...})
-     ```
-   - No incluyas `http://localhost:8000` en las rutas si usas el proxy.
-
-6. **Verifica CORS en el backend**
-
-   - En `main.py` debe estar:
-     ```python
-     app.add_middleware(
-         CORSMiddleware,
-         allow_origins=["*"],
-         allow_credentials=True,
-         allow_methods=["*"],
-         allow_headers=["*"],
-     )
-     ```
-
-7. **Reinicia ambos servidores después de cualquier cambio**
-
-8. **Si el error persiste:**
-   - Abre la consola del navegador y revisa el mensaje exacto.
-   - Abre la terminal donde ejecutas el backend y revisa si hay errores.
-   - Prueba el endpoint manualmente desde [http://localhost:8000/docs](http://localhost:8000/docs).
+- **Testimonios y FAQ:**  
+  Información adicional para clientes.
 
 ---
 
-**Resumen:**
+## Gestión de Usuarios y Superusuario
 
-- Ambos servidores deben estar activos y sin errores.
-- El proxy y CORS deben estar correctamente configurados.
-- Usa rutas relativas en el frontend.
-- Si el backend no responde en `/docs`, primero soluciona eso.
+### Crear superusuario (admin)
+
+En el backend, ejecuta:
+
+```bash
+python manage.py createsuperuser
+```
+
+O usa el script incluido:
+
+```bash
+python create_superuser.py
+```
+
+**Datos por defecto del script:**
+
+- Usuario: `admin`
+- Email: `admin@beardstyle.com`
+- Contraseña: `Admin123456`
+
+El superusuario puede acceder al panel de administración de Django (`/admin`) para gestionar usuarios y citas.
 
 ---
 
-## Cómo Contribuir
+## Pruebas con Postman
 
-1. Haz un fork del repositorio.
-2. Crea una rama para tu funcionalidad o corrección de errores:
+### 1. Registro de usuario
+
+- **POST** `/api/auth/register/`
+- **Body (JSON):**
+  ```json
+  {
+    "nombre": "Juan",
+    "apellido": "Pérez",
+    "email": "juan@example.com",
+    "password": "TuContraseña123"
+  }
+  ```
+
+### 2. Login
+
+- **POST** `/api/auth/login/`
+- **Body (JSON):**
+  ```json
+  {
+    "email": "juan@example.com",
+    "password": "TuContraseña123"
+  }
+  ```
+- **Nota:** Guarda la cookie de sesión (`sessionid`) para siguientes peticiones.
+
+### 3. Crear cita
+
+- **POST** `/api/appointments/`
+- **Headers:**
+  - `X-CSRFToken`: (obtenido de la cookie `csrftoken`)
+  - `Cookie`: Incluye `sessionid` y `csrftoken`
+- **Body (JSON):**
+  ```json
+  {
+    "service": "Corte de Cabello",
+    "date": "2024-06-10T15:00",
+    "status": "pendiente"
+  }
+  ```
+
+### 4. Listar mis citas
+
+- **GET** `/api/appointments/my/`
+- **Headers:**
+  - `Cookie`: Incluye `sessionid`
+
+### 5. Editar cita
+
+- **PUT** `/api/appointments/{id}/`
+- **Headers:**
+  - `X-CSRFToken`: (de la cookie)
+  - `Cookie`: Incluye `sessionid`
+- **Body (JSON):**
+  ```json
+  {
+    "service": "Corte y Barba",
+    "date": "2024-06-11T16:00",
+    "status": "confirmada"
+  }
+  ```
+
+### 6. Eliminar cita
+
+- **DELETE** `/api/appointments/{id}/`
+- **Headers:**
+  - `X-CSRFToken`: (de la cookie)
+  - `Cookie`: Incluye `sessionid`
+
+---
+
+## Configuración y Ejecución
+
+1. **Instala dependencias backend:**
+
    ```bash
-   git checkout -b feature/nueva-funcionalidad
+   pip install -r requirements.txt
    ```
-3. Realiza tus cambios y haz un commit:
+
+2. **Instala dependencias frontend:**
+
    ```bash
-   git commit -m "Agrega nueva funcionalidad"
+   npm install
    ```
-4. Sube tus cambios al repositorio remoto:
+
+3. **Configura variables de entorno si es necesario.**
+
+4. **Corre migraciones y crea superusuario:**
+
    ```bash
-   git push origin feature/nueva-funcionalidad
+   python manage.py makemigrations
+   python manage.py migrate
+   python manage.py createsuperuser
    ```
-5. Abre un Pull Request en GitHub.
+
+5. **Inicia el backend:**
+
+   ```bash
+   python manage.py runserver 0.0.0.0:8000
+   ```
+
+6. **Inicia el frontend:**
+   ```bash
+   npm run serve
+   ```
+
+---
+
+## Notas de Seguridad y Producción
+
+- En producción, configura las cookies como `Secure` y ajusta los orígenes de CORS y CSRF.
+- No expongas el superusuario por defecto.
+- Usa HTTPS en producción.
+- Revisa los logs del backend para errores de autenticación o CSRF.
+- Cambia las claves secretas y contraseñas por defecto.
+
+---
+
+## Detalle de la Lógica y Componentes
+
+### Autenticación y Sesión
+
+- **useAuth.js:**
+
+  - Proporciona estado reactivo de usuario y autenticación.
+  - Métodos: `login`, `logout`, `register`, `checkAuth`.
+  - Guarda el usuario en localStorage y actualiza el estado global.
+
+- **api.js:**
+
+  - Configura Axios para enviar cookies y CSRF automáticamente.
+  - Proporciona métodos para login, registro y gestión de citas.
+
+- **router/index.js:**
+  - Define rutas públicas y protegidas.
+  - Guarda de navegación: si una ruta requiere autenticación y no hay usuario, redirige a `/login`.
+
+### Lógica de Login
+
+- El usuario ingresa email y contraseña.
+- Se llama a `useAuth().login`, que hace POST a `/api/auth/login`.
+- Si es exitoso, guarda el usuario en localStorage y redirige a la ruta deseada.
+- Si falla, muestra mensaje de error.
+
+### Lógica de Registro
+
+- El usuario llena nombre, apellido, email y contraseña.
+- Se valida que las contraseñas coincidan.
+- Se llama a `authService.register`, que hace POST a `/api/auth/register`.
+- Si es exitoso, muestra mensaje y redirige a login.
+
+### Lógica de Citas
+
+- **Crear:**
+
+  - El usuario llena el formulario y envía.
+  - Se llama a `appointmentService.create`.
+  - Si es exitoso, se recarga la lista y muestra notificación.
+
+- **Editar:**
+
+  - El usuario selecciona una cita y edita los campos.
+  - Se llama a `appointmentService.update`.
+  - Si es exitoso, se recarga la lista y muestra notificación.
+
+- **Eliminar:**
+  - El usuario confirma la eliminación.
+  - Se llama a `appointmentService.delete`.
+  - Si es exitoso, se recarga la lista y muestra notificación.
+
+### Lógica de Navegación
+
+- El header muestra "Acceder" si no hay sesión, o el menú de usuario si está autenticado.
+- El botón "Citas" lleva a `/citas` solo si el usuario está autenticado.
+- El botón "Cerrar sesión" elimina los datos de usuario y redirige a inicio.
+
+### Lógica de Secciones
+
+- **HeroSection:**  
+  Presenta la marca y llamado a la acción.
+- **ServicioSection:**  
+  Lista los servicios con iconos y descripciones.
+- **NosotrosSection:**  
+  Historia y valores de la barbería.
+- **FaqSection:**  
+  Preguntas frecuentes con acordeón.
+- **ContactoSection:**  
+  Formulario de contacto y datos de la barbería.
+- **TestimonioSection:**  
+  Opiniones de clientes.
+
+---
+
+## Flujo de Autenticación y Sesión
+
+1. El usuario se registra o inicia sesión.
+2. El backend responde con los datos del usuario y establece la cookie de sesión.
+3. El frontend guarda los datos del usuario en localStorage.
+4. El estado global (`useAuth`) se actualiza y el header muestra el menú de usuario.
+5. Las rutas protegidas solo son accesibles si hay usuario autenticado.
+6. Al cerrar sesión, se eliminan los datos y se redirige a inicio.
+
+---
+
+## Rutas y Navegación
+
+- `/` - Página principal (landing)
+- `/login` - Formulario de inicio de sesión
+- `/register` - Formulario de registro
+- `/citas` - Gestión de citas (protegida)
+- `/edit-appointment/:id` - Editar cita específica (protegida)
+- `/appointments` - Ver todas las citas (admin/protegida)
+- `/my-appointments` - Ver mis citas (protegida)
+- `/admin` - Panel de administración Django (solo superusuario)
+
+---
+
+# Documentación Detallada de la API - Backend BeardStyle
+
+Este backend está construido con Django y Django REST Framework. Expone una API para autenticación de usuarios y gestión de citas para la barbería "Beard & Style".
+
+---
+
+## Estructura de Carpetas Relevante
+
+- `barber_app/models.py`: Modelos de usuario y cita.
+- `barber_app/serializers.py`: Serializadores DRF.
+- `barber_app/views.py`: Lógica de endpoints.
+- `barber_app/urls.py`: Rutas de la API.
+- `barbershop/settings.py`: Configuración global, CORS, CSRF, etc.
+
+---
+
+## Modelos
+
+### Usuario (`Usuario`)
+
+- Hereda de `AbstractUser`.
+- Campos:
+  - `email`: Email único.
+  - `nombre`: Nombre real.
+  - `apellido`: Apellido real.
+  - `fecha_registro`: Fecha de registro.
+  - `username`: Usado para autenticación (igual al email por defecto).
+
+### Cita (`Appointment`)
+
+- Campos:
+  - `user`: FK a Usuario.
+  - `date`: Fecha y hora de la cita.
+  - `service`: Servicio solicitado.
+  - `status`: Estado (`pendiente`, `confirmada`, etc.).
+  - `created_at`: Fecha de creación.
+
+---
+
+## Serializadores
+
+### UsuarioSerializer
+
+- Serializa los campos principales del usuario.
+- Hashea la contraseña al crear usuario.
+- Si no se proporciona `username`, lo iguala al email.
+
+### AppointmentSerializer
+
+- Serializa todos los campos de la cita.
+- El campo `user` es de solo lectura (se asigna automáticamente).
+
+---
+
+## Vistas y Endpoints
+
+### 1. Registro de usuario
+
+- **Clase:** `RegisterView`
+- **URL:** `/api/auth/register/`
+- **Método:** `POST`
+- **CSRF:** Exento
+- **Permisos:** Público
+- **Lógica:**
+  - Valida que el email y username no existan.
+  - Crea usuario con contraseña hasheada.
+  - Devuelve datos del usuario creado.
+
+---
+
+### 2. Login
+
+- **Clase:** `LoginView`
+- **URL:** `/api/auth/login/`
+- **Método:** `POST`
+- **CSRF:** Exento
+- **Permisos:** Público
+- **Lógica:**
+  - Busca usuario por email o username.
+  - Autentica usando el username real.
+  - Si es correcto, inicia sesión y devuelve datos del usuario y la cookie de sesión.
+
+---
+
+### 3. Logout
+
+- **Clase:** `LogoutView`
+- **URL:** `/api/auth/logout/`
+- **Método:** `POST`
+- **CSRF:** Exento
+- **Permisos:** Usuario autenticado
+- **Lógica:**
+  - Cierra la sesión del usuario.
+
+---
+
+### 4. Crear y listar citas
+
+- **Clase:** `AppointmentList`
+- **URL:** `/api/appointments/`
+- **Métodos:** `GET` (listar), `POST` (crear)
+- **CSRF:** Requiere token
+- **Permisos:** Usuario autenticado
+- **Lógica:**
+  - GET: Devuelve solo las citas del usuario autenticado.
+  - POST: Crea una cita para el usuario autenticado.
+
+---
+
+### 5. Ver, editar y eliminar cita específica
+
+- **Clase:** `AppointmentDetail`
+- **URL:** `/api/appointments/<id>/`
+- **Métodos:** `GET`, `PUT`, `DELETE`
+- **CSRF:** Requiere token
+- **Permisos:** Usuario autenticado
+- **Lógica:**
+  - Solo permite acceder a citas propias.
+  - PUT: Actualiza los campos de la cita.
+  - DELETE: Elimina la cita.
+
+---
+
+### 6. Listar solo mis citas
+
+- **Clase:** `MyAppointments`
+- **URL:** `/api/appointments/my/`
+- **Método:** `GET`
+- **CSRF:** Requiere token
+- **Permisos:** Usuario autenticado
+- **Lógica:**
+  - Devuelve solo las citas del usuario autenticado.
+
+---
+
+### 7. API Root
+
+- **Función:** `api_root`
+- **URL:** `/api/`
+- **Método:** `GET`
+- **Lógica:**
+  - Devuelve los endpoints principales de la API.
+
+---
+
+## Seguridad
+
+- **CORS:**  
+  Configurado para aceptar solo orígenes permitidos (localhost y la IP local).
+- **CSRF:**
+  - Exento solo en login, logout y registro.
+  - Requerido en endpoints de citas.
+- **Autenticación:**
+  - Basada en sesión (`SessionAuthentication`).
+  - El usuario debe estar autenticado para gestionar citas.
+
+---
+
+## Ejemplo de Flujo de Autenticación
+
+1. **Registro:**  
+   POST a `/api/auth/register/` con datos del usuario.
+2. **Login:**  
+   POST a `/api/auth/login/` con email y contraseña.  
+   Guarda la cookie de sesión.
+3. **Crear cita:**  
+   POST a `/api/appointments/` con los datos de la cita, enviando la cookie de sesión y el token CSRF.
+4. **Listar citas:**  
+   GET a `/api/appointments/my/` con la cookie de sesión.
+
+---
+
+## Notas
+
+- El superusuario puede acceder al panel `/admin` para gestionar usuarios y citas.
+- Para pruebas con Postman, asegúrate de manejar cookies y CSRF correctamente.
+- Puedes extender la API agregando más endpoints o permisos según necesidades.
 
 ---
 
 ## Créditos
 
-- **Diseño**: Inspirado en las mejores prácticas de diseño web moderno.
-- **Desarrollador**: LeoniBres.
-- **Framework**: Vue.js.
-- **Estilos**: Bootstrap 5.
+- **Desarrollador:** LeoniBres
+- **Frameworks:** Vue.js, Django REST Framework
+- **Diseño:** Inspirado en prácticas modernas de UX/UI
 
 ---
-
-## Licencia
-
-Este proyecto está bajo la licencia [MIT](https://opensource.org/licenses/MIT).

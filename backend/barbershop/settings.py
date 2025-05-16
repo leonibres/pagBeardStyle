@@ -6,7 +6,7 @@ SECRET_KEY = 'django-insecure-your-secret-key-here'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.1.40', '0.0.0.0']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -67,12 +67,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Configuración crítica para URLs
 APPEND_SLASH = False  # Importante: evita que Django redirija automáticamente añadiendo slashes
 
+# Añadir configuración para cookies de sesión y CSRF
+SESSION_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SECURE = False  # Usa True solo en producción HTTPS
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = False     # Usa True solo en producción HTTPS
+
 # Configuración CORS
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://127.0.0.1:8080",
+    "http://192.168.1.40:8080",
 ]
 CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
 CORS_ALLOW_HEADERS = [
@@ -95,18 +102,18 @@ AUTH_USER_MODEL = 'barber_app.Usuario'
 # Configuración de REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',  # Comentado para evitar CSRF
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
-    'CSRF_COOKIE_SECURE': False,  # Desarrollo
-    'CSRF_COOKIE_HTTPONLY': False,  # Desarrollo
+    'CSRF_COOKIE_SECURE': True,
+    'CSRF_COOKIE_HTTPONLY': False,
     'UNICODE_JSON': True,
     'COMPACT_JSON': False,
     'TRAILING_SLASH': False,

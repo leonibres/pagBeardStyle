@@ -9,6 +9,10 @@ from .serializers import UsuarioSerializer, AppointmentSerializer
 from .models import Usuario, Appointment
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+import logging
+
+logger = logging.getLogger(__name__)
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -71,47 +75,57 @@ class RegisterView(APIView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginView(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [AllowAny]
     
     def post(self, request):
-        print("Received login data:", request.data)
-        # Aceptamos tanto username como email para mayor flexibilidad
-        email = request.data.get('email') or request.data.get('username')
+        logger.info("Datos recibidos para login: %s", request.data)
+        
+        email_or_username = request.data.get('email') or request.data.get('username')
         password = request.data.get('password')
         
-        if not email or not password:
+        if not email_or_username or not password:
             return Response({
-                'error': 'Por favor proporcione email y contraseña'
+                'error': 'Por favor proporcione email/usuario y contraseña'
             }, status=status.HTTP_400_BAD_REQUEST)
         
         try:
-            email = email.strip()
-            # Primero intentamos buscar por email
-            try:
-                user = Usuario.objects.get(email=email)
-            except Usuario.DoesNotExist:
-                # Si no existe, intentamos por username
-                try:
-                    user = Usuario.objects.get(username=email)
-                except Usuario.DoesNotExist:
-                    raise
-                
+            # Buscar usuario por email o username
+            user = Usuario.objects.filter(email=email_or_username).first() or \
+                   Usuario.objects.filter(username=email_or_username).first()
+            
+            if not user:
+                return Response({
+                    'error': 'Credenciales inválidas'
+                }, status=status.HTTP_401_UNAUTHORIZED)
+            
+            # Autenticar usando el username real del usuario
             auth_user = authenticate(request, username=user.username, password=password)
             
             if auth_user:
                 login(request, auth_user)
-                return Response({
+                # Asegura que la sesión esté guardada
+                request.session.save()
+                response = Response({
                     'message': 'Login exitoso',
                     'user': UsuarioSerializer(auth_user).data,
-                    'token': 'token-temporal'
+                    'sessionid': request.session.session_key
                 })
+                # CORS y cookies
+                origin = request.headers.get('Origin', '*')
+                response['Access-Control-Allow-Credentials'] = 'true'
+                response['Access-Control-Allow-Origin'] = origin
+                return response
+            
             return Response({
-                'error': 'Contraseña incorrecta'
+                'error': 'Credenciales inválidas'
             }, status=status.HTTP_401_UNAUTHORIZED)
-        except Usuario.DoesNotExist:
+            
+        except Exception as e:
+            logger.error("Error en login: %s", str(e), exc_info=True)
             return Response({
-                'error': 'No existe un usuario con ese email'
-            }, status=status.HTTP_404_NOT_FOUND)
+                'error': 'Error en el servidor'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     # Agregar método OPTIONS para manejar preflight requests correctamente
     def options(self, request, *args, **kwargs):
@@ -128,14 +142,24 @@ class LogoutView(APIView):
         return Response({'message': 'Sesión cerrada exitosamente'})
 
 class AppointmentList(generics.ListCreateAPIView):
-    queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        # Solo citas del usuario autenticado
+        return Appointment.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        # Asignar el usuario autenticado a la cita
+        serializer.save(user=self.request.user)
+
 class AppointmentDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # Solo permitir acceso a las citas del usuario autenticado
+        return Appointment.objects.filter(user=self.request.user)
 
 class MyAppointments(generics.ListAPIView):
     serializer_class = AppointmentSerializer

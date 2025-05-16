@@ -155,7 +155,7 @@
 </template>
 
 <script>
-import axiosInstance from '../axiosConfig';
+import { appointmentService } from '../services/api';
 
 export default {
   name: 'Citas',
@@ -197,12 +197,10 @@ export default {
   methods: {
     async cargarCitas() {
       try {
-        console.log('📋 Cargando citas del usuario...');
-        const response = await axiosInstance.get('/api/citas');
+        const response = await appointmentService.getMine();
         this.citas = response.data;
-        console.log('✅ Citas cargadas:', this.citas);
       } catch (error) {
-        console.error('❌ Error al cargar citas:', error);
+        console.error('Error al cargar citas:', error);
         this.mostrarNotificacion('Error al cargar las citas');
       }
     },
@@ -247,39 +245,34 @@ export default {
     async crearCita() {
       try {
         const citaData = {
-          servicio_id: parseInt(this.form.servicio),
-          fecha: this.form.fecha,
-          hora: this.form.hora,
-          comentario: this.form.comentario || ""
+          servicio: this.form.servicio,
+          date: `${this.form.fecha}T${this.form.hora}`,
+          comentario: this.form.comentario || "",
+          status: this.form.estado
         };
-        
-        console.log('📝 Creando cita:', citaData);
-        const response = await axiosInstance.post('/citas', citaData);
-        
-        if (response.data?.message) {
-          this.mostrarNotificacion(response.data.message, 'success');
-          await this.cargarCitas();
-          this.cerrarFormulario();
-        }
+        await appointmentService.create(citaData);
+        this.mostrarNotificacion('Cita creada correctamente');
+        await this.cargarCitas();
+        this.cerrarFormulario();
       } catch (error) {
         console.error('❌ Error:', error);
-        this.mostrarNotificacion(
-          error.response?.data?.detail || 'Error al crear la cita',
-          'error'
-        );
+        this.mostrarNotificacion('Error al crear la cita');
       }
     },
     async actualizarCita() {
       try {
-        const token = localStorage.getItem('token');
-        await axiosInstance.patch(`/api/citas/${this.editId}`, { ...this.form }, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const citaData = {
+          servicio: this.form.servicio,
+          date: `${this.form.fecha}T${this.form.hora}`,
+          comentario: this.form.comentario || "",
+          status: this.form.estado
+        };
+        await appointmentService.update(this.editId, citaData);
         this.mostrarNotificacion('Cita actualizada correctamente');
         this.cerrarFormulario();
         this.cargarCitas();
       } catch (e) {
-        this.mostrarNotificacion(e.response?.data?.message || 'Error al actualizar cita');
+        this.mostrarNotificacion('Error al actualizar cita');
       }
     },
     abrirModalEliminarCita(cita) {
@@ -291,15 +284,12 @@ export default {
     },
     async eliminarCitaConfirmada() {
       try {
-        const token = localStorage.getItem('token');
-        await axiosInstance.delete(`/api/citas/${this.citaAEliminar._id}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        await appointmentService.delete(this.citaAEliminar.id || this.citaAEliminar._id);
         this.mostrarNotificacion('Cita eliminada correctamente');
         this.cerrarModalEliminar();
         this.cargarCitas();
       } catch (e) {
-        this.mostrarNotificacion(e.response?.data?.message || 'Error al eliminar cita');
+        this.mostrarNotificacion('Error al eliminar cita');
       }
     }
   },

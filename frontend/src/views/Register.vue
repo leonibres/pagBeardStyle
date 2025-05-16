@@ -72,6 +72,8 @@
 </template>
 
 <script>
+import { authService } from '../services/api'
+
 export default {
   name: 'Register',
   data() {
@@ -100,40 +102,13 @@ export default {
       try {
         console.log('Enviando datos de registro:', this.formData);
         
-        const response = await fetch('http://localhost:8000/api/auth/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            email: this.formData.email.trim(),
-            username: this.formData.email.trim(),
-            password: this.formData.password,
-            nombre: this.formData.nombre.trim(),
-            apellido: this.formData.apellido.trim()
-          })
+        await authService.register({
+          email: this.formData.email.trim(),
+          username: this.formData.email.trim(),
+          password: this.formData.password,
+          nombre: this.formData.nombre.trim(),
+          apellido: this.formData.apellido.trim()
         });
-
-        console.log('Status:', response.status);
-        
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error('Error del servidor:', errorData);
-          
-          if (errorData.email) {
-            throw new Error(errorData.email[0] || 'Error en el email');
-          } else if (errorData.username) {
-            throw new Error(errorData.username[0] || 'Error en el username');
-          } else if (errorData.detail) {
-            throw new Error(errorData.detail);
-          } else {
-            throw new Error('Error en el registro. Intente nuevamente.');
-          }
-        }
-
-        const data = await response.json();
-        console.log('Respuesta exitosa:', data);
 
         // Mostrar mensaje de éxito y redirigir
         alert('Usuario registrado exitosamente. Ahora puedes iniciar sesión.');

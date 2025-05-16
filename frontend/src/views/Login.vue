@@ -58,44 +58,47 @@ export default {
       this.error = '';
       
       try {
-        // Cambiando el nombre del campo a email para que coincida con lo que espera el backend
-        const response = await fetch('http://localhost:8000/api/auth/login', {
+        const response = await fetch('/api/auth/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'X-CSRFToken': this.getCookie('csrftoken') || ''
           },
           body: JSON.stringify({
-            email: this.username.trim(),  // Enviamos como email, no como username
+            email: this.username.trim(),
             password: this.password
           }),
           credentials: 'include',
-          cache: 'no-cache',
-          redirect: 'follow'
+          mode: 'cors'
         });
         
-        console.log('Status:', response.status);
-        
         if (!response.ok) {
-          throw new Error('Error de autenticación. Por favor verifica tus credenciales.');
+          let errorData = {};
+          try {
+            errorData = await response.json();
+          } catch (e) {
+            // Ignorar error al parsear JSON de error
+          }
+          throw new Error(errorData.error || 'Error de autenticación');
         }
         
         const data = await response.json();
-        
-        // Almacenar datos del usuario
-        localStorage.setItem('token', data.token || 'default-token');
         localStorage.setItem('userData', JSON.stringify(data.user || {}));
         
-        // Redirigir
         const intendedPath = sessionStorage.getItem('intendedPath') || '/citas';
         sessionStorage.removeItem('intendedPath');
         this.$router.push(intendedPath);
       } catch (error) {
-        console.error('Error en login:', error);
         this.error = error.message || 'Error de conexión. Por favor, intenta más tarde.';
       } finally {
         this.isLoading = false;
       }
+    },
+    getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
     }
   }
 }

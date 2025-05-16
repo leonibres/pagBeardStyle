@@ -5,8 +5,7 @@ module.exports = defineConfig({
     port: 8080,
     proxy: {
       "^/api": {
-        // Cambia 'localhost' por la IP de tu backend si accedes desde otra máquina
-        target: "http://192.168.1.40:8000",
+        target: "http://192.168.1.40:8000", // IP del backend
         changeOrigin: true,
         logLevel: "debug",
         pathRewrite: { "^/api": "/api" },

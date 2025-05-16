@@ -42,6 +42,8 @@
 </template>
 
 <script>
+import { useAuth } from '@/composables/useAuth'
+
 export default {
   name: 'Login',
   data() {
@@ -52,40 +54,19 @@ export default {
       isLoading: false
     }
   },
+  setup() {
+    const { login } = useAuth()
+    return { login }
+  },
   methods: {
     async handleLogin() {
       this.isLoading = true;
       this.error = '';
-      
       try {
-        const response = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-CSRFToken': this.getCookie('csrftoken') || ''
-          },
-          body: JSON.stringify({
-            email: this.username.trim(),
-            password: this.password
-          }),
-          credentials: 'include',
-          mode: 'cors'
+        await this.login({
+          email: this.username.trim(),
+          password: this.password
         });
-        
-        if (!response.ok) {
-          let errorData = {};
-          try {
-            errorData = await response.json();
-          } catch (e) {
-            // Ignorar error al parsear JSON de error
-          }
-          throw new Error(errorData.error || 'Error de autenticación');
-        }
-        
-        const data = await response.json();
-        localStorage.setItem('userData', JSON.stringify(data.user || {}));
-        
         const intendedPath = sessionStorage.getItem('intendedPath') || '/citas';
         sessionStorage.removeItem('intendedPath');
         this.$router.push(intendedPath);

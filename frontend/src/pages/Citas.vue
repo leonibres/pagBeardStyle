@@ -35,25 +35,27 @@
           </div>
 
           <div v-else class="citas-grid">
-            <div v-for="cita in citas" :key="cita._id" class="cita-card" :class="cita.estado">
+            <div v-for="cita in citas" :key="cita.id || cita._id" class="cita-card" :class="cita.status">
               <div class="card-header">
-                <h3>{{ cita.servicio }}</h3>
-                <span class="status-badge">{{ formatEstado(cita.estado) }}</span>
+                <h3>{{ cita.service }}</h3>
+                <span class="status-badge">{{ formatEstado(cita.status) }}</span>
               </div>
               
               <div class="card-body">
                 <div class="info-item">
                   <i class="fas fa-calendar-day"></i>
-                  <span>{{ formatFecha(cita.fecha) }}</span>
+                  <span>{{ formatFecha(cita.date) }}</span>
                 </div>
                 <div class="info-item">
                   <i class="fas fa-clock"></i>
-                  <span>{{ cita.hora }}</span>
+                  <span>{{ cita.date ? cita.date.slice(11, 16) : '' }}</span>
                 </div>
+                <!-- Si tienes comentario en el modelo, descomenta esto:
                 <div v-if="cita.comentario" class="info-item">
                   <i class="fas fa-comment"></i>
                   <span>{{ cita.comentario }}</span>
                 </div>
+                -->
               </div>
               
               <div class="card-actions">
@@ -245,9 +247,8 @@ export default {
     async crearCita() {
       try {
         const citaData = {
-          servicio: this.form.servicio,
+          service: this.form.servicio,
           date: `${this.form.fecha}T${this.form.hora}`,
-          comentario: this.form.comentario || "",
           status: this.form.estado
         };
         await appointmentService.create(citaData);
@@ -255,8 +256,21 @@ export default {
         await this.cargarCitas();
         this.cerrarFormulario();
       } catch (error) {
+        // Mostrar mensaje de error real del backend si existe
+        let msg = 'Error al crear la cita';
+        if (error.response && error.response.data) {
+          if (typeof error.response.data === 'string') {
+            msg = error.response.data;
+          } else if (error.response.data.detail) {
+            msg = error.response.data.detail;
+          } else if (error.response.data.error) {
+            msg = error.response.data.error;
+          } else if (typeof error.response.data === 'object') {
+            msg = Object.values(error.response.data).join(' ');
+          }
+        }
         console.error('❌ Error:', error);
-        this.mostrarNotificacion('Error al crear la cita');
+        this.mostrarNotificacion(msg);
       }
     },
     async actualizarCita() {
@@ -491,6 +505,7 @@ export default {
   transition: all 0.3s ease;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
   border: 1px solid rgba(0, 0, 0, 0.05);
+  color: var(--color-dark); /* <-- Añade esto para texto oscuro */
 }
 
 .cita-card:hover {
@@ -519,6 +534,13 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+}
+
+.card-header h3,
+.card-body,
+.info-item span,
+.status-badge {
+  color: var(--color-dark); /* Fuerza el texto a ser oscuro */
 }
 
 .card-header h3 {

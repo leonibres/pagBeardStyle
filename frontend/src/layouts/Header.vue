@@ -64,7 +64,7 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <i class="fas fa-user me-2"></i>{{ userData.nombre }}
+            <i class="fas fa-user me-2"></i>{{ userData?.nombre || userData?.username || 'Usuario' }}
           </button>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuButton">
             <li><router-link class="dropdown-item" to="/perfil">Mi Perfil</router-link></li>
@@ -116,7 +116,6 @@ export default {
     },
     async handleCitasClick() {
       this.isNavbarOpen = false;
-      
       if (this.isAuthenticated) {
         await this.$router.push('/citas');
       } else {

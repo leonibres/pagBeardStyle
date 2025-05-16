@@ -1,7 +1,23 @@
 import axios from "axios";
 
+// Función para obtener el token CSRF de las cookies
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === name + "=") {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
 const api = axios.create({
-  baseURL: "http://192.168.1.40:8000/api",
+  baseURL: "/api", // Usa ruta relativa para aprovechar el proxy
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -12,6 +28,13 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   // Eliminar slashes finales y caracteres especiales
   config.url = config.url.replace(/\/+$/, "").trim();
+  // Agregar CSRF token si es POST, PUT, PATCH o DELETE
+  if (["post", "put", "patch", "delete"].includes(config.method)) {
+    const csrftoken = getCookie("csrftoken");
+    if (csrftoken) {
+      config.headers["X-CSRFToken"] = csrftoken;
+    }
+  }
   return config;
 });
 

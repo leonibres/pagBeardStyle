@@ -70,12 +70,13 @@ router.beforeEach(async (to, from, next) => {
     return next();
   }
 
-  const token = localStorage.getItem("token");
+  // Cambia la validación: revisa userData en localStorage
+  const userData = localStorage.getItem("userData");
 
-  if (!token) {
-    console.log("No hay token, redirigiendo al login");
+  if (!userData) {
+    console.log("No hay sesión, redirigiendo al login");
     sessionStorage.setItem("intendedPath", to.fullPath);
-    return next("/");
+    return next("/login");
   }
 
   next();

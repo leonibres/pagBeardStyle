@@ -118,3 +118,9 @@ REST_FRAMEWORK = {
     'COMPACT_JSON': False,
     'TRAILING_SLASH': False,
 }
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+    "http://192.168.1.40:8080"
+]

@@ -505,6 +505,9 @@ Este proyecto está bajo la Licencia MIT - ver el archivo LICENSE para más deta
 
 ## 🧑‍💻 Desarrollador
 
-Desarrollador: LeoniBres
-Frameworks: Vue.js, Django REST Framework
-Diseño: Inspirado en prácticas modernas de UX/UI
+- **Autor:** LeoniBres
+- **Frameworks principales:** Vue.js (frontend), Django REST Framework (backend)
+- **Diseño:** Basado en principios modernos de UX/UI para ofrecer una experiencia intuitiva y atractiva
+- **Contacto:** [leonibres@gmail.com](mailto:leonibresjimenez@gmail.com)
+
+¡Gracias por visitar el proyecto! Si tienes sugerencias o encuentras algún problema, no dudes en contribuir o abrir un issue.

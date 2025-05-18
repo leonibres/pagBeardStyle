@@ -41,22 +41,7 @@
             <router-link class="nav-link" to="/#contact" @click="scrollToSection('contact')">
               Contacto
             </router-link>
-          </li>
-          <!-- Menú desplegable "Más" -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false" @click="toggleDropdown">
-              Más
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown" :class="{ show: isDropdownOpen }">
-              <li><router-link class="dropdown-item" to="/articulos">Artículos</router-link></li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li><router-link class="dropdown-item" to="/terminos">Términos</router-link></li>
-              <li><router-link class="dropdown-item" to="/privacidad">Privacidad</router-link></li>
-            </ul>
-          </li>
+          </li>          
         </ul>
 
         <!-- Botón de acceso o menú de usuario según autenticación -->
@@ -78,9 +63,7 @@
           >
             <i class="fas fa-user me-2"></i>{{ userData?.nombre || userData?.username || 'Usuario' }}
           </button>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuButton">
-            <li><router-link class="dropdown-item" to="/perfil">Mi Perfil</router-link></li>
-            <li><router-link class="dropdown-item" to="/mis-citas">Mis Citas</router-link></li>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuButton">             
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#" @click.prevent="handleLogout">Cerrar Sesión</a></li>
           </ul>

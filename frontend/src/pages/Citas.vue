@@ -87,7 +87,7 @@
             <label>Servicio</label>
             <select v-model="form.servicio" required>
               <option value="" disabled>Seleccione un servicio</option>
-              <option v-for="serv in servicios" :key="serv" :value="serv">{{ serv }}</option>
+              <option v-for="serv in servicios" :key="serv.id" :value="serv.nombre">{{ serv.nombre }}</option>
             </select>
           </div>
           
@@ -165,11 +165,11 @@ export default {
     return {
       citas: [],
       servicios: [
-        'Corte de Cabello',
-        'Afeitado Clásico',
-        'Corte y Barba',
-        'Arreglo de Barba',
-        'Tratamiento Capilar'
+        { id: 1, nombre: 'Corte de Cabello' },
+        { id: 2, nombre: 'Afeitado Clásico' },
+        { id: 3, nombre: 'Corte y Barba' },
+        { id: 4, nombre: 'Arreglo de Barba' },
+        { id: 5, nombre: 'Tratamiento Capilar' }
       ],
       horasDisponibles: [
         '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
@@ -197,6 +197,11 @@ export default {
     }
   },
   methods: {
+    getCookie(name) {
+      let value = "; " + document.cookie;
+      let parts = value.split("; " + name + "=");
+      if (parts.length === 2) return parts.pop().split(";").shift();
+    },
     async cargarCitas() {
       try {
         const response = await appointmentService.getMine();
@@ -246,17 +251,24 @@ export default {
     },
     async crearCita() {
       try {
+        const csrfToken = this.getCookie('csrftoken');
         const citaData = {
           service: this.form.servicio,
           date: `${this.form.fecha}T${this.form.hora}`,
           status: this.form.estado
         };
-        await appointmentService.create(citaData);
+        console.log('Enviando datos cita:', citaData);
+        await appointmentService.create(citaData, {
+          headers: { 'X-CSRFToken': csrfToken },
+          withCredentials: true
+        });
         this.mostrarNotificacion('Cita creada correctamente');
         await this.cargarCitas();
         this.cerrarFormulario();
       } catch (error) {
         let msg = 'Error al crear la cita';
+        // Log detallado para depuración
+        console.error('Respuesta error cita:', error?.response?.data || error);
         if (error.response && error.response.data) {
           if (typeof error.response.data === 'string') {
             msg = error.response.data;
@@ -267,8 +279,9 @@ export default {
           } else if (typeof error.response.data === 'object') {
             msg = Object.values(error.response.data).join(' ');
           }
+        } else if (error.message) {
+          msg = error.message;
         }
-        console.error('❌ Error:', error);
         this.mostrarNotificacion(msg);
       }
     },

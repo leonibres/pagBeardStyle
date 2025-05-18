@@ -505,9 +505,6 @@ Este proyecto está bajo la Licencia MIT - ver el archivo LICENSE para más deta
 
 ## 🧑‍💻 Desarrollador
 
-Desarrollado por LeoniBres - Soluciones web para negocios.
-
-Para soporte o consultas:
-
-- **Correo**: contacto@leonibres.com
-- **Web**: https://leonibres.com
+Desarrollador: LeoniBres
+Frameworks: Vue.js, Django REST Framework
+Diseño: Inspirado en prácticas modernas de UX/UI

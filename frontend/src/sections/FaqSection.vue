@@ -1,6 +1,8 @@
 <template>
+  <!-- FAQ Section -->
   <section id="faq" class="faq-section">
     <div class="container">
+      <!-- Section Title and Subtitle -->
       <div class="row" style="margin-top: 2.5rem;">
         <div class="col-xl-12 text-center">
           <h2 class="section-title">Preguntas Frecuentes</h2>
@@ -12,7 +14,9 @@
       </div>
       <div class="row justify-content-center">
         <div class="col-xl-8">
+          <!-- FAQ Accordion -->
           <div class="faq-accordion" id="faqAccordion">
+            <!-- FAQ Item 1: Horarios de atención -->
             <div class="faq-item">
               <div class="faq-header" id="headingOne">
                 <button class="faq-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
@@ -35,6 +39,7 @@
               </div>
             </div>
 
+            <!-- FAQ Item 2: Servicios ofrecidos -->
             <div class="faq-item">
               <div class="faq-header" id="headingTwo">
                 <button class="faq-button collapsed" type="button" data-bs-toggle="collapse"
@@ -58,6 +63,7 @@
               </div>
             </div>
 
+            <!-- FAQ Item 3: Reserva de cita -->
             <div class="faq-item">
               <div class="faq-header" id="headingThree">
                 <button class="faq-button collapsed" type="button" data-bs-toggle="collapse"
@@ -81,6 +87,7 @@
               </div>
             </div>
 
+            <!-- FAQ Item 4: Ubicación -->
             <div class="faq-item">
               <div class="faq-header" id="headingFour">
                 <button class="faq-button collapsed" type="button" data-bs-toggle="collapse"
@@ -102,7 +109,9 @@
                 </div>
               </div>
             </div>
+            <!-- End FAQ Items -->
           </div>
+          <!-- End FAQ Accordion -->
         </div>
       </div>
     </div>
@@ -110,6 +119,7 @@
 </template>
 
 <script>
+// Componente de sección de preguntas frecuentes (FAQ)
 export default {
   name: "FaqSection"
 };

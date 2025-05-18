@@ -1333,3 +1333,667 @@ Header
 /* ======================
    Estilo para CITAS.VUE
 ======================== */
+
+/* Estructura principal */
+.admin-citas-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.admin-header {
+  background-color: var(--color-white);
+  padding: 1rem 2rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-top: 3.5rem; /* aumenta el margen superior para dejar espacio al navbar fijo */
+  z-index: 1;
+  position: relative;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-title i {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+}
+
+.header-title h1 {
+  font-size: 1.5rem;
+  margin: 0;
+  color: var(--color-dark);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-light-gray);
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+}
+
+.admin-main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Sección de citas */
+.citas-section {
+  background-color: var(--color-white);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.section-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--color-dark);
+}
+
+.section-header i {
+  color: var(--color-primary);
+}
+
+.section-header button.btn-primary i {
+  color: #1f1f1f; /* --color-gray */
+  transition: color 0.2s;
+}
+
+.section-header button.btn-primary:hover i {
+  color: #fff;
+}
+
+/* Contenedor de citas */
+.citas-container {
+  padding: 1.5rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-light-gray);
+  /* Centrar el contenido vertical y horizontalmente */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--color-primary);
+}
+
+.empty-state h3 {
+  margin-bottom: 1rem;
+  color: var(--color-dark);
+}
+
+.empty-state button.btn-primary {
+  padding: 0.45rem 1.1rem;
+  font-size: 1rem;
+  min-width: unset;
+  border-radius: 5px;
+  box-shadow: none;
+  margin-top: 1.2rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* centra el contenido horizontalmente */
+  gap: 0.5rem;
+  background: #F68F32;
+  color: #fff;
+  border: 2px solid #F68F32;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.empty-state button.btn-primary i {
+  font-size: 1.2rem;
+  margin: 0; /* elimina cualquier margen lateral */
+  color: #1f1f1f;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* centra el icono vertical y horizontalmente */
+  min-width: 1.2em;
+  min-height: 1.2em;
+}
+
+.empty-state button.btn-primary:hover {
+  background: #fff;
+  color: #F68F32;
+  border-color: #F68F32;
+}
+
+.empty-state button.btn-primary:hover i {
+  color: #F68F32;
+}
+
+.citas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Tarjeta de cita */
+.cita-card {
+  background-color: var(--color-white);
+  border-radius: 10px;
+  padding: 1.5rem;
+  border-left: 4px solid;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  color: var(--color-dark); /* <-- Añade esto para texto oscuro */
+}
+
+.cita-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.cita-card.pendiente {
+  border-left-color: #FFC107;
+}
+
+.cita-card.confirmada {
+  border-left-color: #4CAF50;
+}
+
+.cita-card.completada {
+  border-left-color: #2196F3;
+}
+
+.cita-card.cancelada {
+  border-left-color: #F44336;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.card-header h3,
+.card-body,
+.info-item span,
+.status-badge {
+  color: var(--color-dark); /* Fuerza el texto a ser oscuro */
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--color-dark);
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-semibold);
+  text-transform: capitalize;
+}
+
+.cita-card.pendiente .status-badge {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #FFC107;
+}
+
+.cita-card.confirmada .status-badge {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #4CAF50;
+}
+
+.cita-card.completada .status-badge {
+  background-color: rgba(33, 150, 243, 0.1);
+  color: #2196F3;
+}
+
+.cita-card.cancelada .status-badge {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #F44336;
+}
+
+.card-body {
+  margin-bottom: 1.5rem;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  color: var(--color-light-gray);
+  font-size: 0.9rem;
+}
+
+.info-item i {
+  width: 20px;
+  text-align: center;
+  color: var(--color-primary);
+}
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* Botones */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-btn-text);
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #e07d22;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(246, 143, 50, 0.3);
+}
+
+.btn-secondary {
+  background-color: var(--color-white);
+  color: var(--color-dark);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #f0f0f0;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.btn-danger {
+  background-color: #F44336;
+  color: var(--color-white);
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #d32f2f;
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+}
+
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-icon.edit {
+  color: #2196F3;
+}
+
+.btn-icon.edit:hover {
+  background-color: rgba(33, 150, 243, 0.1);
+}
+
+.btn-icon.delete {
+  color: #F44336;
+}
+
+.btn-icon.delete:hover {
+  background-color: rgba(244, 67, 54, 0.1);
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  color: var(--color-light-gray);
+  cursor: pointer;
+  font-size: 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.btn-close:hover {
+  color: var(--color-dark);
+  transform: rotate(90deg);
+}
+
+/* Formulario */
+.form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.cita-form {
+  background-color: var(--color-white);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: fadeIn 0.3s ease-out;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--color-dark);
+}
+
+form {
+  padding: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--color-dark);
+  font-weight: var(--font-weight-medium);
+}
+
+select, input, textarea {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--color-white);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  color: var(--color-dark);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+select:focus, input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(246, 143, 50, 0.2);
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* Modal de confirmación */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.confirm-modal {
+  background-color: var(--color-white);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  overflow: hidden;
+  animation: fadeIn 0.3s ease-out;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--color-dark);
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-body p {
+  margin-bottom: 0.5rem;
+  color: var(--color-dark);
+}
+
+.text-muted {
+  color: var(--color-light-gray);
+  font-size: 0.875rem;
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+/* Notificación */
+.notification {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1050;
+  max-width: 300px;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .citas-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .form-actions, .modal-footer {
+    flex-direction: column;
+  }
+  
+  .btn-primary, .btn-secondary, .btn-danger {
+    width: 100%;
+  }
+}
+
+
+/* ======================
+  EstiloperfectSection  
+======================== */
+
+.estiloperfect-section {
+  background: var(--color-background);
+  padding: 4rem 0;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+}
+
+.estiloperfect-text {
+  text-align: left;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.estiloperfect-title {
+  color: var(--color-primary);
+  font-size: 2.2rem;
+  font-family: var(--font-main);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: 1.2rem;
+  line-height: 1.2;
+}
+
+.estiloperfect-desc {
+  color: var(--color-white);
+  font-size: 1.15rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.estiloperfect-btn {
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 992px) {
+  .estiloperfect-title {
+    font-size: 1.5rem;
+  }
+  .estiloperfect-section {
+    padding: 2rem 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .estiloperfect-section {
+    padding: 1rem 0;
+  }
+  .estiloperfect-text {
+    padding: 1rem 0.3rem;
+    text-align: center;
+    align-items: center;
+  }
+}
+

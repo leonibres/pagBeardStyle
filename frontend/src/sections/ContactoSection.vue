@@ -1,9 +1,13 @@
+
 <template>
+  <!-- Sección de contacto principal -->
   <section id="contact" class="contacto-section">
     <div class="container">
       <div class="row">
+        <!-- Columna de información de contacto -->
         <div class="col-lg-6" style="margin-top: 2.5rem;">
           <div class="text-container">
+            <!-- Título de la sección -->
             <div class="section-title">Contáctanos</div>
             <h2>Reserva o consulta tu cita</h2>
             <p>
@@ -11,6 +15,7 @@
               tienes preguntas o deseas reservar una cita, completa el
               formulario y nos pondremos en contacto contigo lo antes posible.
             </p>
+            <!-- Lista de información de contacto -->
             <ul class="list-unstyled li-space-lg">
               <li class="d-flex">
                 <i class="fas fa-phone-alt"></i>
@@ -34,17 +39,22 @@
             </ul>
           </div>
         </div>
+        <!-- Columna del formulario de contacto -->
         <div class="col-lg-6" style="margin-top: 2.5rem;">
           <form>
+            <!-- Campo para el nombre del usuario -->
             <div class="form-group">
               <input type="text" class="form-control-input" placeholder="Nombre" required />
             </div>
+            <!-- Campo para el correo electrónico del usuario -->
             <div class="form-group">
               <input type="email" class="form-control-input" placeholder="Correo Electrónico" required />
             </div>
+            <!-- Campo para el mensaje del usuario -->
             <div class="form-group">
               <textarea class="form-control-input" placeholder="Mensaje" rows="4" required></textarea>
             </div>
+            <!-- Botón para enviar el formulario -->
             <div class="form-group">
               <button type="submit" class="form-control-submit-button">
                 Enviar
@@ -59,6 +69,6 @@
 
 <script>
 export default {
-  name: "ContactoSection"
+  name: "ContactoSection" // Nombre del componente
 };
 </script>

@@ -578,3 +578,276 @@ Este backend está construido con Django y Django REST Framework. Expone una API
 - **Diseño:** Inspirado en prácticas modernas de UX/UI
 
 ---
+
+# Estándares de Documentación y Comunicación entre Frontend y Backend
+
+## Estándares de Documentación del Código
+
+### Frontend (Vue.js)
+
+#### Componentes Vue
+
+Los componentes Vue deben documentarse siguiendo esta estructura:
+
+```js
+/**
+ * @component NombreComponente
+ * @description Breve descripción del propósito del componente
+ * @author Nombre del autor (opcional)
+ *
+ * @example
+ * <NombreComponente
+ *   :prop1="valor"
+ *   @evento="manejadorEvento"
+ * />
+ */
+```
+
+Para las propiedades (props) y eventos:
+
+```js
+props: {
+  /**
+   * Descripción de la propiedad
+   * @type {String|Number|Boolean|Array|Object|Function|...}
+   * @default valorPorDefecto (si aplica)
+   * @required true|false (si aplica)
+   */
+  nombrePropiedad: {
+    type: String,
+    required: true
+  }
+},
+
+methods: {
+  /**
+   * Descripción del método
+   * @param {Tipo} nombreParámetro - Descripción del parámetro
+   * @returns {Tipo} Descripción del valor de retorno
+   */
+  nombreMetodo(param) {
+    // Implementación
+  }
+}
+```
+
+#### Servicios API
+
+Los servicios que se comunican con la API deben documentarse claramente:
+
+```js
+/**
+ * Servicio para gestionar las citas a través de la API
+ * @module appointmentService
+ */
+
+/**
+ * Obtiene todas las citas del usuario autenticado
+ * @async
+ * @returns {Promise<Array>} Lista de citas del usuario
+ * @throws {Error} Si hay un problema de conexión o autenticación
+ */
+async function getMine() {
+  // Implementación
+}
+```
+
+### Backend (Django)
+
+#### Modelos
+
+```python
+class NombreModelo(models.Model):
+    """
+    Descripción de lo que representa este modelo.
+
+    Attributes:
+        campo1 (tipo): Descripción del campo.
+        campo2 (tipo): Descripción del campo.
+    """
+    campo1 = models.CharField(max_length=100)
+    # ...
+
+    def metodo(self, param):
+        """
+        Descripción del método.
+
+        Args:
+            param (tipo): Descripción del parámetro.
+
+        Returns:
+            tipo: Descripción del valor de retorno.
+
+        Raises:
+            Exception: En qué casos lanza excepciones.
+        """
+        # Implementación
+```
+
+#### Vistas y Endpoints
+
+```python
+class VistaAPI(APIView):
+    """
+    Descripción del endpoint y sus funcionalidades.
+
+    Métodos HTTP soportados:
+    - GET: Descripción del comportamiento para GET
+    - POST: Descripción del comportamiento para POST
+    - etc.
+
+    Permisos requeridos:
+    - Lista de permisos
+
+    Formatos de respuesta:
+    - Success: Descripción y ejemplo del formato de respuesta exitosa
+    - Error: Descripción y ejemplo de los posibles errores
+    """
+```
+
+## Comunicación entre Frontend y Backend
+
+### Estructura de Integración
+
+```
+[Frontend (Vue.js)]
+      │
+      ▼
+[Servicios API]  ◄─── [Composables]
+      │                    ▲
+      │                    │
+      ▼                    │
+[Axios/Fetch]          [Componentes]
+      │                    ▲
+      │                    │
+      ▼                    │
+[Django REST API] ───► [Estado/Store]
+      │
+      ▼
+[Modelos Django]
+```
+
+### Flujo de Comunicación
+
+1. **Solicitudes HTTP**:
+
+   - El frontend utiliza Axios configurado en `src/services/api.js` para comunicarse con el backend.
+   - Todas las peticiones deben incluir los tokens CSRF y cookies de sesión automáticamente.
+
+2. **Manejo de Respuestas**:
+
+   - El backend responde con códigos HTTP estándar (200, 201, 400, 401, 403, 404, 500).
+   - Las respuestas incluyen:
+     - Datos solicitados en caso de éxito
+     - Mensajes claros de error en caso de fallo
+     - Metadatos relevantes cuando sea necesario
+
+3. **Formato de Datos**:
+
+   ```
+   // Éxito
+   {
+     "status": "success",
+     "data": { ... },
+     "message": "Operación realizada con éxito" (opcional)
+   }
+
+   // Error
+   {
+     "status": "error",
+     "error": "Mensaje claro del error",
+     "detail": "Detalles técnicos" (opcional, para desarrollo)
+   }
+   ```
+
+### Manejo de Errores
+
+1. **Frontend**:
+
+   ```js
+   try {
+     const response = await appointmentService.create(citaData);
+     // Manejar éxito
+   } catch (error) {
+     // Verificar tipo de error
+     if (error.response) {
+       // El servidor respondió con un código de error
+       const errorMessage =
+         error.response.data.error || "Ha ocurrido un error en el servidor";
+       // Mostrar al usuario
+     } else if (error.request) {
+       // La petición fue hecha pero no se recibió respuesta
+       // Mostrar error de conexión
+     } else {
+       // Error en la configuración de la petición
+       console.error("Error:", error.message);
+     }
+   }
+   ```
+
+2. **Backend**:
+   ```python
+   try:
+       # Lógica de procesamiento
+       return Response({"status": "success", "data": datos}, status=status.HTTP_200_OK)
+   except ValidationError as e:
+       return Response({"status": "error", "error": str(e)},
+                      status=status.HTTP_400_BAD_REQUEST)
+   except Exception as e:
+       # Registrar el error para debugging
+       logger.error(f"Error inesperado: {str(e)}")
+       return Response({"status": "error", "error": "Error interno del servidor"},
+                      status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+   ```
+
+## Buenas Prácticas para Integración
+
+1. **Versionado de API**:
+
+   - Utilizar prefijos como `/api/v1/` para facilitar futuras actualizaciones.
+   - Documentar cambios entre versiones.
+
+2. **Testing End-to-End**:
+
+   - Crear pruebas que validen la comunicación completa frontend-backend.
+   - Utilizar Cypress o similares para simular interacciones de usuario.
+
+3. **Mocks para Desarrollo**:
+
+   ```js
+   // En ambiente de desarrollo, usar mocks para facilitar el trabajo sin backend
+   const appointmentService =
+     process.env.NODE_ENV === "development"
+       ? require("./mock/appointmentService")
+       : require("./api/appointmentService");
+   ```
+
+4. **Logs Consistentes**:
+
+   - Usar un formato consistente de logs en ambos proyectos.
+   - Implementar niveles de log (debug, info, warning, error).
+   - En producción, centralizar logs para mejor debugging.
+
+5. **Performance**:
+   - Minimizar el número de peticiones HTTP.
+   - Implementar paginación para conjuntos grandes de datos.
+   - Considerar el uso de caché para datos frecuentes.
+   - Comprimir respuestas usando gzip/br.
+
+---
+
+# Herramientas Recomendadas para Documentación
+
+## Frontend
+
+- [JSDoc](https://jsdoc.app/) - Para documentar JavaScript/Vue
+- [Storybook](https://storybook.js.org/) - Para documentar componentes visualmente
+- [Vue Styleguidist](https://vue-styleguidist.github.io/) - Para crear una guía de estilos y documentación de componentes
+
+## Backend
+
+- [Sphinx](https://www.sphinx-doc.org/) - Para generar documentación de Python
+- [drf-yasg](https://drf-yasg.readthedocs.io/) - Para generar automáticamente documentación Swagger/OpenAPI para Django REST Framework
+- [Django Debug Toolbar](https://django-debug-toolbar.readthedocs.io/) - Para depuración y análisis de rendimiento
+
+---

@@ -1,37 +1,95 @@
-<<<<<<< HEAD
-# BeardStyle - Plataforma de Gestión para Barberías
+# BeardStyle - Sistema de Gestión para Barberías
 
-BeardStyle es una aplicación web completa para la gestión de barberías, que permite a los clientes reservar citas y a los administradores gestionar servicios, personal y horarios.
+BeardStyle es una aplicación web completa para barberías, desarrollada con Vue.js en el frontend y Django REST Framework en el backend. Permite a los usuarios registrarse, iniciar sesión, gestionar citas y visualizar información sobre los servicios que ofrece la barbería.
 
-## Estructura del Proyecto
+## 📋 Tabla de Contenidos
 
-El proyecto está organizado en dos partes principales:
+1. [Estructura del Proyecto](#estructura-del-proyecto)
+2. [Tecnologías Utilizadas](#tecnologías-utilizadas)
+3. [Requisitos del Sistema](#requisitos-del-sistema)
+4. [Configuración del Entorno](#configuración-del-entorno)
+5. [Ejecución del Proyecto](#ejecución-del-proyecto)
+6. [Integración Frontend-Backend](#integración-frontend-backend)
+7. [Arquitectura del Sistema](#arquitectura-del-sistema)
+8. [Flujo de Datos](#flujo-de-datos)
+9. [Autenticación y Seguridad](#autenticación-y-seguridad)
+10. [Gestión de Citas](#gestión-de-citas)
+11. [Superusuario y Panel de Administración](#superusuario-y-panel-de-administración)
+12. [Mejores Prácticas](#mejores-prácticas)
+13. [Resolución de Problemas](#resolución-de-problemas)
+14. [Contribuciones](#contribuciones)
+15. [Documentación Adicional](#documentación-adicional)
+16. [Licencia](#licencia)
+
+## 📂 Estructura del Proyecto
 
 ```
 pagBeardStyle/
-├── backend/         # API REST en Django REST Framework
-│   ├── barber_app/  # Aplicación principal
-│   ├── barbershop/  # Configuración del proyecto Django
-│   └── API_README.md # Documentación específica del backend
-├── frontend/        # Interfaz de usuario en Vue.js
-│   ├── src/         # Código fuente Vue
-│   ├── public/      # Archivos públicos
-│   └── README.md    # Documentación específica del frontend
-└── README.md        # Este archivo
+├── backend/                  # API REST en Django
+│   ├── barber_app/           # Aplicación principal
+│   │   ├── admin.py          # Configuración del panel de administración
+│   │   ├── models.py         # Definición de modelos (Usuario, Appointment)
+│   │   ├── serializers.py    # Serializadores para la API
+│   │   ├── views.py          # Vistas/Controladores de la API
+│   │   └── urls.py           # Rutas de la API
+│   ├── barbershop/           # Configuración del proyecto Django
+│   │   ├── settings.py       # Configuraciones (DB, Auth, CORS, etc.)
+│   │   └── urls.py           # Rutas principales
+│   ├── manage.py             # Script de gestión Django
+│   ├── requirements.txt      # Dependencias Python
+│   └── API_README.md         # Documentación específica de la API
+├── frontend/                 # Aplicación Vue.js
+│   ├── public/               # Archivos públicos estáticos
+│   │   └── assets/           # Recursos estáticos (CSS, imágenes)
+│   ├── src/                  # Código fuente Vue
+│   │   ├── assets/           # Recursos internos
+│   │   ├── components/       # Componentes reutilizables
+│   │   ├── composables/      # Lógica reutilizable (useAuth, etc.)
+│   │   ├── layouts/          # Layouts principales (Header, Footer)
+│   │   ├── pages/            # Páginas completas (Citas)
+│   │   ├── router/           # Configuración de rutas
+│   │   ├── sections/         # Secciones de página (Hero, Servicios)
+│   │   ├── services/         # Servicios API (auth, appointments)
+│   │   └── views/            # Vistas (Login, Register)
+│   ├── .env.local            # Variables de entorno locales
+│   ├── package.json          # Dependencias JavaScript
+│   └── README.md             # Documentación específica del frontend
+└── README.md                 # Este documento
 ```
 
-## Requisitos Previos
+## 🛠️ Tecnologías Utilizadas
 
-- Python 3.8+
-- Node.js 14+
-- npm 6+ o yarn
-- Base de datos (PostgreSQL recomendado para producción, SQLite para desarrollo)
+### Backend
 
-## Configuración del Entorno
+- **Django**: Framework web de Python
+- **Django REST Framework**: Biblioteca para construir APIs RESTful
+- **SQLite/PostgreSQL**: Base de datos
+- **Django CORS Headers**: Para manejo de CORS
+- **Django Authentication**: Para autenticación basada en sesión
+
+### Frontend
+
+- **Vue.js**: Framework JavaScript progresivo
+- **Vue Router**: Enrutamiento del lado del cliente
+- **Axios**: Cliente HTTP para comunicación con la API
+- **Bootstrap**: Framework CSS para diseño responsivo
+- **FontAwesome**: Iconos vectoriales
+
+## 📋 Requisitos del Sistema
+
+- **Python** 3.8+
+- **Node.js** 14+
+- **npm** 6+ o yarn
+- Navegador moderno (Chrome, Firefox, Safari, Edge)
+- Base de datos (SQLite para desarrollo, PostgreSQL recomendado para producción)
+- 2GB RAM mínimo para desarrollo
+- 50MB espacio en disco (excluyendo dependencias)
+
+## ⚙️ Configuración del Entorno
 
 ### Backend (Django)
 
-1. Crear entorno virtual:
+1. **Crear entorno virtual**:
 
    ```bash
    cd backend
@@ -39,708 +97,417 @@ pagBeardStyle/
    source venv/bin/activate  # En Windows: venv\Scripts\activate
    ```
 
-2. Instalar dependencias:
-=======
-# BeardStyle-Web
-
-**BeardStyle-Web** es una aplicación web para la barbería "Beard & Style", desarrollada con Vue.js (frontend) y Django REST Framework (backend). Permite a los usuarios registrarse, iniciar sesión, gestionar citas, y visualizar información relevante sobre la barbería.
-
----
-
-## Tabla de Contenidos
-
-- [Estructura del Proyecto](#estructura-del-proyecto)
-- [Componentes y Secciones](#componentes-y-secciones)
-- [Funcionalidades Principales](#funcionalidades-principales)
-- [Gestión de Usuarios y Superusuario](#gestión-de-usuarios-y-superusuario)
-- [Pruebas con Postman](#pruebas-con-postman)
-- [Configuración y Ejecución](#configuración-y-ejecución)
-- [Notas de Seguridad y Producción](#notas-de-seguridad-y-producción)
-- [Detalle de la Lógica y Componentes](#detalle-de-la-lógica-y-componentes)
-- [Flujo de Autenticación y Sesión](#flujo-de-autenticación-y-sesión)
-- [Rutas y Navegación](#rutas-y-navegación)
-- [Documentación Detallada de la API - Backend](#documentación-detallada-de-la-api---backend-beardstyle)
-- [Créditos](#créditos)
-
----
-
-## Estructura del Proyecto
-
-```text
-pagBeardStyle/
-├── backend/
-│   ├── barber_app/
-│   ├── barbershop/
-│   └── manage.py
-├── frontend/
-│   ├── src/
-│   │   ├── assets/
-│   │   ├── components/
-│   │   ├── layouts/
-│   │   ├── pages/
-│   │   ├── sections/
-│   │   ├── views/
-│   │   ├── router/
-│   │   ├── services/
-│   │   └── composables/
-│   ├── public/
-│   └── README.md
-```
-
----
-
-## Componentes y Secciones
-
-### Layouts
-
-- **Header.vue**  
-  Barra de navegación principal. Muestra enlaces a las secciones, acceso/login y menú de usuario autenticado.
-
-  - Lógica: Cambia el menú según el estado de autenticación (`useAuth`).
-  - Permite navegación a rutas protegidas y públicas.
-
-- **footer.vue**  
-  Pie de página con enlaces a redes sociales, botón para volver arriba y créditos.
-
-### Pages
-
-- **Citas.vue**  
-  Panel principal para gestión de citas del usuario autenticado.
-
-  - Permite crear, editar y eliminar citas.
-  - Muestra notificaciones de éxito/error.
-  - Lógica: Usa `appointmentService` para interactuar con la API.
-
-- **Appointments.vue**  
-  (Solo admin) Visualiza todas las citas del sistema.
-
-- **MyAppointments.vue**  
-  Muestra solo las citas del usuario autenticado.
-  - Permite editar y cancelar citas propias.
-
-### Views
-
-- **Login.vue**  
-  Formulario de inicio de sesión.
-
-  - Lógica: Usa el composable `useAuth` para login.
-  - Al iniciar sesión, redirige a la ruta protegida deseada.
-  - Maneja errores de autenticación y muestra mensajes claros.
-
-- **Register.vue**  
-  Formulario de registro de usuario.
-
-  - Valida contraseñas.
-  - Llama a `authService.register`.
-  - Redirige a login tras registro exitoso.
-
-- **EditAppointment.vue**  
-  Edición avanzada de una cita específica (usada en rutas tipo `/edit-appointment/:id`).
-
-### Sections
-
-- **HeroSection.vue**  
-  Sección principal de bienvenida con branding y llamado a la acción.
-- **ServicioSection.vue**  
-  Lista y descripción de servicios ofrecidos.
-- **EstiloperfectSection.vue**  
-  Llamado a la acción para reservar cita.
-- **EnfoqueSection.vue**  
-  Filosofía y enfoque de la barbería.
-- **NosotrosSection.vue**  
-  Historia y valores de la empresa.
-- **FaqSection.vue**  
-  Preguntas frecuentes.
-- **ContactoSection.vue**  
-  Formulario de contacto y datos de la barbería.
-- **TestimonioSection.vue**  
-  Testimonios de clientes.
-
----
-
-## Funcionalidades Principales
-
-- **Registro de usuario:**  
-  Permite crear una cuenta con nombre, apellido, email y contraseña.  
-  Valida que el email no esté registrado y que las contraseñas coincidan.
-
-- **Inicio de sesión:**  
-  Autenticación con email y contraseña.  
-  Manejo de sesión vía cookies y almacenamiento de datos del usuario en localStorage.
-
-- **Gestión de citas:**
-
-  - Crear cita: Selecciona servicio, fecha, hora y estado.
-  - Editar cita: Modifica los datos de una cita existente.
-  - Eliminar cita: Borra una cita del sistema.
-  - Solo el usuario autenticado puede ver y gestionar sus citas.
-
-- **Protección de rutas:**  
-  Solo usuarios autenticados pueden acceder a la gestión de citas y rutas protegidas.  
-  Si no hay sesión, se redirige automáticamente a `/login`.
-
-- **Navegación reactiva:**  
-  El menú cambia automáticamente según el estado de autenticación.
-
-- **Formulario de contacto:**  
-  Permite enviar mensajes a la barbería (puedes conectar con backend o solo mostrar info).
-
-- **Testimonios y FAQ:**  
-  Información adicional para clientes.
-
----
-
-## Gestión de Usuarios y Superusuario
-
-### Crear superusuario (admin)
-
-En el backend, ejecuta:
-
-```bash
-python manage.py createsuperuser
-```
-
-O usa el script incluido:
-
-```bash
-python create_superuser.py
-```
-
-**Datos por defecto del script:**
-
-- Usuario: `admin`
-- Email: `admin@beardstyle.com`
-- Contraseña: `Admin123456`
-
-El superusuario puede acceder al panel de administración de Django (`/admin`) para gestionar usuarios y citas.
-
----
-
-## Pruebas con Postman
-
-### 1. Registro de usuario
-
-- **POST** `/api/auth/register/`
-- **Body (JSON):**
-  ```json
-  {
-    "nombre": "Juan",
-    "apellido": "Pérez",
-    "email": "juan@example.com",
-    "password": "TuContraseña123"
-  }
-  ```
-
-### 2. Login
-
-- **POST** `/api/auth/login/`
-- **Body (JSON):**
-  ```json
-  {
-    "email": "juan@example.com",
-    "password": "TuContraseña123"
-  }
-  ```
-- **Nota:** Guarda la cookie de sesión (`sessionid`) para siguientes peticiones.
-
-### 3. Crear cita
-
-- **POST** `/api/appointments/`
-- **Headers:**
-  - `X-CSRFToken`: (obtenido de la cookie `csrftoken`)
-  - `Cookie`: Incluye `sessionid` y `csrftoken`
-- **Body (JSON):**
-  ```json
-  {
-    "service": "Corte de Cabello",
-    "date": "2024-06-10T15:00",
-    "status": "pendiente"
-  }
-  ```
-
-### 4. Listar mis citas
-
-- **GET** `/api/appointments/my/`
-- **Headers:**
-  - `Cookie`: Incluye `sessionid`
-
-### 5. Editar cita
-
-- **PUT** `/api/appointments/{id}/`
-- **Headers:**
-  - `X-CSRFToken`: (de la cookie)
-  - `Cookie`: Incluye `sessionid`
-- **Body (JSON):**
-  ```json
-  {
-    "service": "Corte y Barba",
-    "date": "2024-06-11T16:00",
-    "status": "confirmada"
-  }
-  ```
-
-### 6. Eliminar cita
-
-- **DELETE** `/api/appointments/{id}/`
-- **Headers:**
-  - `X-CSRFToken`: (de la cookie)
-  - `Cookie`: Incluye `sessionid`
-
----
-
-## Configuración y Ejecución
-
-1. **Instala dependencias backend:**
->>>>>>> dda9d5c24eaf070dae3f7f3b7713f93e863558cd
+2. **Instalar dependencias**:
 
    ```bash
    pip install -r requirements.txt
    ```
 
-<<<<<<< HEAD
-3. Configurar variables de entorno (crear un archivo `.env`):
+3. **Configurar variables de entorno** (crear un archivo `.env` en la carpeta backend):
 
    ```
    DEBUG=True
-   SECRET_KEY=your-secret-key
+   SECRET_KEY=your-secret-key-here
    DATABASE_URL=sqlite:///db.sqlite3
    ALLOWED_HOSTS=localhost,127.0.0.1
+   CORS_ALLOWED_ORIGINS=http://localhost:8080,http://127.0.0.1:8080
    ```
 
-4. Aplicar migraciones:
+4. **Aplicar migraciones**:
 
    ```bash
    python manage.py migrate
    ```
 
-5. Crear superusuario:
+5. **Crear superusuario**:
+
    ```bash
    python manage.py createsuperuser
    ```
 
+   Cuando ejecutes este comando, se te solicitará proporcionar un nombre de usuario, una dirección de correo electrónico y una contraseña para el superusuario. Por ejemplo:
+
+   ```
+   Username: admin
+   Email: admin@beardstyle.com
+   Password: Admin123456
+   Password (again): Admin123456
+   ```
+
 ### Frontend (Vue.js)
 
-1. Instalar dependencias:
+1. **Instalar dependencias**:
 
    ```bash
    cd frontend
    npm install  # o yarn
    ```
 
-2. Configurar variables de entorno (crear un archivo `.env.local`):
+2. **Configurar variables de entorno** (crear un archivo `.env.local` en la carpeta frontend):
    ```
    VUE_APP_API_URL=http://localhost:8000/api
    ```
 
-## Ejecución para Desarrollo
+## 🚀 Ejecución del Proyecto
 
-1. Iniciar backend:
+### Desarrollo
+
+1. **Iniciar backend**:
 
    ```bash
    cd backend
    python manage.py runserver
    ```
 
-2. Iniciar frontend (en una nueva terminal):
+   El backend estará disponible en: http://localhost:8000
+
+2. **Iniciar frontend**:
 
    ```bash
    cd frontend
    npm run serve  # o yarn serve
    ```
 
-3. Acceder a:
-   - Frontend: http://localhost:8080
-   - Backend API: http://localhost:8000/api/
-   - Admin de Django: http://localhost:8000/admin/
+   El frontend estará disponible en: http://localhost:8080
 
-## Integración entre Frontend y Backend
+3. **Acceso**:
+   - **Frontend**: http://localhost:8080
+   - **API REST**: http://localhost:8000/api/
+   - **Panel Admin**: http://localhost:8000/admin/
 
-### Comunicación API
+### Producción
 
-El frontend se comunica con el backend mediante peticiones HTTP a la API REST:
-
-1. Los servicios en `frontend/src/services/` encapsulan todas las llamadas API.
-2. Se utiliza Axios para realizar peticiones HTTP.
-3. La autenticación se maneja mediante cookies de sesión.
-
-### Flujo de Datos
-
-```
-[Vue Components] ⟷ [Vuex/State] ⟷ [API Services] ⟷ [Django REST API] ⟷ [Django Models]
-```
-
-Para más detalles sobre la implementación de la API y sus endpoints, consulta:
-
-- [Documentación del Backend](./backend/API_README.md)
-- [Documentación del Frontend](./frontend/README.md)
-
-## Despliegue en Producción
-
-### Backend
-
-1. Configurar `.env` para producción:
-
-   ```
-   DEBUG=False
-   SECRET_KEY=una-clave-muy-segura
-   DATABASE_URL=postgresql://user:password@localhost/beardstyle
-   ALLOWED_HOSTS=tudominio.com,www.tudominio.com
-   ```
-
-2. Recopilar archivos estáticos:
+1. **Backend**:
 
    ```bash
+   cd backend
    python manage.py collectstatic
-   ```
-
-3. Usar Gunicorn como servidor WSGI:
-
-   ```bash
    gunicorn barbershop.wsgi:application
    ```
 
-4. Configurar Nginx como proxy inverso.
-
-### Frontend
-
-1. Construir para producción:
-
+2. **Frontend**:
    ```bash
+   cd frontend
    npm run build
    ```
+   Los archivos compilados se encontrarán en `frontend/dist/`
 
-2. Servir archivos estáticos generados en `dist/` mediante Nginx.
+## 🔄 Integración Frontend-Backend
 
-## Licencia
+### Comunicación API
 
-Este proyecto está bajo la Licencia MIT - ver el archivo LICENSE para más detalles.
-=======
-2. **Instala dependencias frontend:**
+La comunicación entre el frontend y el backend se realiza mediante solicitudes HTTP RESTful:
 
-   ```bash
-   npm install
+1. **Servicios API en el Frontend**:
+
+   ```javascript
+   // src/services/api.js - Configuración base de Axios
+   import axios from "axios";
+
+   const apiClient = axios.create({
+     baseURL: process.env.VUE_APP_API_URL,
+     withCredentials: true, // Importante para enviar/recibir cookies
+     headers: {
+       Accept: "application/json",
+       "Content-Type": "application/json",
+     },
+   });
+
+   // Interceptor para manejar tokens CSRF
+   apiClient.interceptors.request.use((config) => {
+     const csrfToken = getCookie("csrftoken");
+     if (csrfToken) {
+       config.headers["X-CSRFToken"] = csrfToken;
+     }
+     return config;
+   });
+
+   export default apiClient;
    ```
 
-3. **Configura variables de entorno si es necesario.**
+2. **Servicios Específicos**:
 
-4. **Corre migraciones y crea superusuario:**
+   ```javascript
+   // src/services/auth.js
+   import apiClient from "./api";
 
-   ```bash
-   python manage.py makemigrations
-   python manage.py migrate
-   python manage.py createsuperuser
+   export default {
+     login(credentials) {
+       return apiClient.post("/auth/login/", credentials);
+     },
+
+     register(userData) {
+       return apiClient.post("/auth/register/", userData);
+     },
+
+     logout() {
+       return apiClient.post("/auth/logout/");
+     },
+   };
    ```
 
-5. **Inicia el backend:**
+3. **Composables para Estado Global**:
 
-   ```bash
-   python manage.py runserver 0.0.0.0:8000
+   ```javascript
+   // src/composables/useAuth.js
+   import { ref } from "vue";
+   import authService from "@/services/auth";
+
+   const user = ref(JSON.parse(localStorage.getItem("user")) || null);
+
+   export default function useAuth() {
+     const login = async (credentials) => {
+       const response = await authService.login(credentials);
+       user.value = response.data;
+       localStorage.setItem("user", JSON.stringify(response.data));
+       return response;
+     };
+
+     // Otras funciones: logout, register, checkAuth...
+
+     return {
+       user,
+       login,
+       // ...otros métodos
+     };
+   }
    ```
-
-6. **Inicia el frontend:**
-   ```bash
-   npm run serve
-   ```
-
----
-
-## Notas de Seguridad y Producción
-
-- En producción, configura las cookies como `Secure` y ajusta los orígenes de CORS y CSRF.
-- No expongas el superusuario por defecto.
-- Usa HTTPS en producción.
-- Revisa los logs del backend para errores de autenticación o CSRF.
-- Cambia las claves secretas y contraseñas por defecto.
-
----
-
-## Detalle de la Lógica y Componentes
 
 ### Autenticación y Sesión
 
-- **useAuth.js:**
+El sistema utiliza autenticación basada en sesión:
 
-  - Proporciona estado reactivo de usuario y autenticación.
-  - Métodos: `login`, `logout`, `register`, `checkAuth`.
-  - Guarda el usuario en localStorage y actualiza el estado global.
+1. **Backend**: Django crea una cookie `sessionid` al iniciar sesión.
+2. **Frontend**:
+   - Envía credenciales a `/api/auth/login/`
+   - Almacena datos del usuario en localStorage
+   - Incluye cookies en todas las peticiones subsecuentes
+   - Actualiza la UI según el estado de autenticación
 
-- **api.js:**
+## 🏗️ Arquitectura del Sistema
 
-  - Configura Axios para enviar cookies y CSRF automáticamente.
-  - Proporciona métodos para login, registro y gestión de citas.
+```
+[Cliente Web]
+    │
+    ▼
+[Vue Router] ─── [Componentes Vue] ─── [Composables (Estado)]
+    │                                          │
+    │                                          │
+    ▼                                          ▼
+[Servicios API] ───────────────────────► [Estado Local]
+    │
+    │ HTTP/REST
+    │
+    ▼
+[Django URLs] ──► [Django Views/Viewsets] ──► [Django Serializers]
+    │                      │                           │
+    │                      │                           │
+    ▼                      ▼                           ▼
+[Middlewares] ───► [Authentication] ───────► [Django Models]
+                                                      │
+                                                      ▼
+                                                 [Database]
+```
 
-- **router/index.js:**
-  - Define rutas públicas y protegidas.
-  - Guarda de navegación: si una ruta requiere autenticación y no hay usuario, redirige a `/login`.
+## 📊 Flujo de Datos
 
-### Lógica de Login
+### Ejemplo: Crear una Cita
 
-- El usuario ingresa email y contraseña.
-- Se llama a `useAuth().login`, que hace POST a `/api/auth/login`.
-- Si es exitoso, guarda el usuario en localStorage y redirige a la ruta deseada.
-- Si falla, muestra mensaje de error.
+1. **Usuario Interactúa**: Completa formulario de cita
+2. **Componente Vue**: Valida datos y llama al servicio API
+3. **Servicio API**: Envía solicitud POST a `/api/appointments/`
+4. **Django View**: Valida autenticación y datos
+5. **Serializer**: Valida y procesa datos
+6. **Model**: Guarda datos en la base de datos
+7. **Respuesta**: Django devuelve respuesta JSON con datos de la cita
+8. **Frontend**: Actualiza UI y muestra notificación
 
-### Lógica de Registro
+## 🔐 Autenticación y Seguridad
 
-- El usuario llena nombre, apellido, email y contraseña.
-- Se valida que las contraseñas coincidan.
-- Se llama a `authService.register`, que hace POST a `/api/auth/register`.
-- Si es exitoso, muestra mensaje y redirige a login.
+### Flujo de Autenticación
 
-### Lógica de Citas
+1. **Registro**:
 
-- **Crear:**
+   - POST a `/api/auth/register/` con datos del usuario
+   - Backend valida, crea usuario y devuelve datos
+   - Frontend redirige a login
 
-  - El usuario llena el formulario y envía.
-  - Se llama a `appointmentService.create`.
-  - Si es exitoso, se recarga la lista y muestra notificación.
+2. **Login**:
 
-- **Editar:**
+   - POST a `/api/auth/login/` con credenciales
+   - Backend autentica y establece cookie de sesión
+   - Frontend guarda datos del usuario en localStorage
+   - UI se actualiza según estado de autenticación
 
-  - El usuario selecciona una cita y edita los campos.
-  - Se llama a `appointmentService.update`.
-  - Si es exitoso, se recarga la lista y muestra notificación.
+3. **Mantenimiento de Sesión**:
 
-- **Eliminar:**
-  - El usuario confirma la eliminación.
-  - Se llama a `appointmentService.delete`.
-  - Si es exitoso, se recarga la lista y muestra notificación.
+   - Backend: Cookie `sessionid` validada en cada petición
+   - Frontend: Token CSRF incluido en peticiones no exentas
 
-### Lógica de Navegación
+4. **Logout**:
+   - POST a `/api/auth/logout/`
+   - Backend invalida la sesión
+   - Frontend elimina datos de localStorage
 
-- El header muestra "Acceder" si no hay sesión, o el menú de usuario si está autenticado.
-- El botón "Citas" lleva a `/citas` solo si el usuario está autenticado.
-- El botón "Cerrar sesión" elimina los datos de usuario y redirige a inicio.
+### Seguridad Implementada
 
-### Lógica de Secciones
+- **CSRF Protection**: Tokens CSRF para prevenir ataques Cross-Site Request Forgery
+- **CORS**: Configurado para permitir solo orígenes específicos
+- **Contraseñas**: Hasheadas en la base de datos usando Django's password hasher
+- **Autenticación por Sesión**: Cookies seguras para mantener sesión
+- **Validación de Entrada**: Tanto en frontend como backend
 
-- **HeroSection:**  
-  Presenta la marca y llamado a la acción.
-- **ServicioSection:**  
-  Lista los servicios con iconos y descripciones.
-- **NosotrosSection:**  
-  Historia y valores de la barbería.
-- **FaqSection:**  
-  Preguntas frecuentes con acordeón.
-- **ContactoSection:**  
-  Formulario de contacto y datos de la barbería.
-- **TestimonioSection:**  
-  Opiniones de clientes.
+## 📅 Gestión de Citas
 
----
+### Crear Cita
 
-## Flujo de Autenticación y Sesión
+1. Usuario accede a formulario de cita (`/citas`)
+2. Selecciona servicio, fecha y hora
+3. Frontend valida datos y envía a la API
+4. Backend valida y guarda la cita
+5. Frontend actualiza la lista de citas
 
-1. El usuario se registra o inicia sesión.
-2. El backend responde con los datos del usuario y establece la cookie de sesión.
-3. El frontend guarda los datos del usuario en localStorage.
-4. El estado global (`useAuth`) se actualiza y el header muestra el menú de usuario.
-5. Las rutas protegidas solo son accesibles si hay usuario autenticado.
-6. Al cerrar sesión, se eliminan los datos y se redirige a inicio.
+### Editar/Eliminar Cita
 
----
+1. Usuario selecciona cita existente
+2. Puede modificar campos o eliminar la cita
+3. API verifica que el usuario sea propietario de la cita
+4. Se actualiza o elimina en la base de datos
+5. Frontend refleja los cambios
 
-## Rutas y Navegación
+## 👨‍💼 Superusuario y Panel de Administración
 
-- `/` - Página principal (landing)
-- `/login` - Formulario de inicio de sesión
-- `/register` - Formulario de registro
-- `/citas` - Gestión de citas (protegida)
-- `/edit-appointment/:id` - Editar cita específica (protegida)
-- `/appointments` - Ver todas las citas (admin/protegida)
-- `/my-appointments` - Ver mis citas (protegida)
-- `/admin` - Panel de administración Django (solo superusuario)
+### Credenciales por Defecto
 
----
+Si usas el script de creación de superusuario o el comando `createsuperuser`, configura:
 
-# Documentación Detallada de la API - Backend BeardStyle
+- **Usuario**: `admin`
+- **Email**: `admin@beardstyle.com`
+- **Contraseña**: `Admin123456`
 
-Este backend está construido con Django y Django REST Framework. Expone una API para autenticación de usuarios y gestión de citas para la barbería "Beard & Style".
+> ⚠️ **Importante**: Cambia estas credenciales en producción.
 
----
+### Acceso al Panel de Administración
 
-## Estructura de Carpetas Relevante
+1. Accede a `http://localhost:8000/admin/`
+2. Ingresa las credenciales de superusuario
+3. Desde aquí puedes:
+   - Gestionar usuarios
+   - Ver y editar todas las citas
+   - Configurar permisos
 
-- `barber_app/models.py`: Modelos de usuario y cita.
-- `barber_app/serializers.py`: Serializadores DRF.
-- `barber_app/views.py`: Lógica de endpoints.
-- `barber_app/urls.py`: Rutas de la API.
-- `barbershop/settings.py`: Configuración global, CORS, CSRF, etc.
+## 🌟 Mejores Prácticas
 
----
+### Desarrollo Frontend
 
-## Modelos
+1. **Componentes Reutilizables**: Crear componentes modulares con responsabilidades específicas
+2. **Composables para Estado**: Extraer lógica a composables para facilitar la reutilización
+3. **Tipado de Datos**: Documentar props y eventos con JSDoc o TypeScript
+4. **Manejo de Errores**: Implementar try/catch en llamadas API
+5. **Lazy Loading**: Cargar componentes bajo demanda para mejorar rendimiento
 
-### Usuario (`Usuario`)
+### Desarrollo Backend
 
-- Hereda de `AbstractUser`.
-- Campos:
-  - `email`: Email único.
-  - `nombre`: Nombre real.
-  - `apellido`: Apellido real.
-  - `fecha_registro`: Fecha de registro.
-  - `username`: Usado para autenticación (igual al email por defecto).
+1. **Serialización de Datos**: Usar serializadores para validación y transformación de datos
+2. **Permisos Granulares**: Implementar permisos a nivel de vista/modelo
+3. **Paginación**: Implementar para conjuntos grandes de datos
+4. **Validación**: Validar datos tanto a nivel de serializer como de modelo
+5. **Logs**: Mantener logs detallados para depuración
 
-### Cita (`Appointment`)
+### Comunicación Frontend-Backend
 
-- Campos:
-  - `user`: FK a Usuario.
-  - `date`: Fecha y hora de la cita.
-  - `service`: Servicio solicitado.
-  - `status`: Estado (`pendiente`, `confirmada`, etc.).
-  - `created_at`: Fecha de creación.
+1. **Formato Estándar**: Usar formato JSON consistente para respuestas
+2. **Códigos HTTP**: Usar códigos HTTP apropiados (200, 201, 400, 401, etc.)
+3. **Mensajes de Error**: Devolver mensajes claros y accionables
+4. **Versionado API**: Considerar prefijos como `/api/v1/` para futuras actualizaciones
+5. **Documentación**: Mantener documentación actualizada de endpoints
 
----
+## 🔍 Resolución de Problemas
 
-## Serializadores
+### Problemas Comunes
 
-### UsuarioSerializer
+1. **Error CSRF**:
 
-- Serializa los campos principales del usuario.
-- Hashea la contraseña al crear usuario.
-- Si no se proporciona `username`, lo iguala al email.
+   - Verificar que se envía el token CSRF en las peticiones no exentas
+   - Asegurarse de que las cookies se envían correctamente
 
-### AppointmentSerializer
+2. **Error de Autenticación**:
 
-- Serializa todos los campos de la cita.
-- El campo `user` es de solo lectura (se asigna automáticamente).
+   - Verificar que la sesión está activa
+   - Comprobar que las credenciales son correctas
+   - Intentar iniciar sesión nuevamente
 
----
+3. **Problemas CORS**:
 
-## Vistas y Endpoints
+   - Verificar que el origen del frontend está permitido en CORS_ALLOWED_ORIGINS
+   - Asegurarse de que CORS_ALLOW_CREDENTIALS es True
 
-### 1. Registro de usuario
+4. **Citas no aparecen**:
+   - Verificar que el usuario está autenticado
+   - Comprobar que la petición API es correcta
+   - Verificar que el usuario tiene citas asignadas
 
-- **Clase:** `RegisterView`
-- **URL:** `/api/auth/register/`
-- **Método:** `POST`
-- **CSRF:** Exento
-- **Permisos:** Público
-- **Lógica:**
-  - Valida que el email y username no existan.
-  - Crea usuario con contraseña hasheada.
-  - Devuelve datos del usuario creado.
+### Debugging
 
----
+**Frontend**:
 
-### 2. Login
+```javascript
+// Activar logs solo en desarrollo
+if (process.env.NODE_ENV === "development") {
+  console.log("Datos enviados:", data);
+  console.log("Respuesta API:", response);
+}
+```
 
-- **Clase:** `LoginView`
-- **URL:** `/api/auth/login/`
-- **Método:** `POST`
-- **CSRF:** Exento
-- **Permisos:** Público
-- **Lógica:**
-  - Busca usuario por email o username.
-  - Autentica usando el username real.
-  - Si es correcto, inicia sesión y devuelve datos del usuario y la cookie de sesión.
+**Backend**:
 
----
+```python
+import logging
+logger = logging.getLogger(__name__)
 
-### 3. Logout
+try:
+    # Operación
+    logger.info(f"Operación exitosa para usuario {request.user}")
+except Exception as e:
+    logger.error(f"Error: {str(e)}")
+```
 
-- **Clase:** `LogoutView`
-- **URL:** `/api/auth/logout/`
-- **Método:** `POST`
-- **CSRF:** Exento
-- **Permisos:** Usuario autenticado
-- **Lógica:**
-  - Cierra la sesión del usuario.
+## 👥 Contribuciones
 
----
+Para contribuir al proyecto:
 
-### 4. Crear y listar citas
+1. Fork el repositorio
+2. Crea una rama para tu feature (`git checkout -b feature/amazing-feature`)
+3. Commit tus cambios (`git commit -m 'Add some amazing feature'`)
+4. Push a la rama (`git push origin feature/amazing-feature`)
+5. Abre un Pull Request
 
-- **Clase:** `AppointmentList`
-- **URL:** `/api/appointments/`
-- **Métodos:** `GET` (listar), `POST` (crear)
-- **CSRF:** Requiere token
-- **Permisos:** Usuario autenticado
-- **Lógica:**
-  - GET: Devuelve solo las citas del usuario autenticado.
-  - POST: Crea una cita para el usuario autenticado.
+### Estándares de Código
 
----
+- **Frontend**: Sigue la guía de estilo de Vue.js
+- **Backend**: Sigue PEP 8 para Python
+- **Commits**: Usa mensajes descriptivos y concisos
+- **Documentación**: Documenta nuevas características o cambios
 
-### 5. Ver, editar y eliminar cita específica
+## 📚 Documentación Adicional
 
-- **Clase:** `AppointmentDetail`
-- **URL:** `/api/appointments/<id>/`
-- **Métodos:** `GET`, `PUT`, `DELETE`
-- **CSRF:** Requiere token
-- **Permisos:** Usuario autenticado
-- **Lógica:**
-  - Solo permite acceder a citas propias.
-  - PUT: Actualiza los campos de la cita.
-  - DELETE: Elimina la cita.
+- [Documentación del Backend](./backend/API_README.md)
+- [Documentación del Frontend](./frontend/README.md)
+- [Documentación de Django](https://docs.djangoproject.com/)
+- [Documentación de Vue.js](https://vuejs.org/guide/introduction.html)
+- [Documentación de Django REST Framework](https://www.django-rest-framework.org/)
 
----
+## 📄 Licencia
 
-### 6. Listar solo mis citas
-
-- **Clase:** `MyAppointments`
-- **URL:** `/api/appointments/my/`
-- **Método:** `GET`
-- **CSRF:** Requiere token
-- **Permisos:** Usuario autenticado
-- **Lógica:**
-  - Devuelve solo las citas del usuario autenticado.
+Este proyecto está bajo la Licencia MIT - ver el archivo LICENSE para más detalles.
 
 ---
 
-### 7. API Root
+## 🧑‍💻 Desarrollador
 
-- **Función:** `api_root`
-- **URL:** `/api/`
-- **Método:** `GET`
-- **Lógica:**
-  - Devuelve los endpoints principales de la API.
+Desarrollado por LeoniBres - Soluciones web para negocios.
 
----
+Para soporte o consultas:
 
-## Seguridad
-
-- **CORS:**  
-  Configurado para aceptar solo orígenes permitidos (localhost y la IP local).
-- **CSRF:**
-  - Exento solo en login, logout y registro.
-  - Requerido en endpoints de citas.
-- **Autenticación:**
-  - Basada en sesión (`SessionAuthentication`).
-  - El usuario debe estar autenticado para gestionar citas.
-
----
-
-## Ejemplo de Flujo de Autenticación
-
-1. **Registro:**  
-   POST a `/api/auth/register/` con datos del usuario.
-2. **Login:**  
-   POST a `/api/auth/login/` con email y contraseña.  
-   Guarda la cookie de sesión.
-3. **Crear cita:**  
-   POST a `/api/appointments/` con los datos de la cita, enviando la cookie de sesión y el token CSRF.
-4. **Listar citas:**  
-   GET a `/api/appointments/my/` con la cookie de sesión.
-
----
-
-## Notas
-
-- El superusuario puede acceder al panel `/admin` para gestionar usuarios y citas.
-- Para pruebas con Postman, asegúrate de manejar cookies y CSRF correctamente.
-- Puedes extender la API agregando más endpoints o permisos según necesidades.
-
----
->>>>>>> dda9d5c24eaf070dae3f7f3b7713f93e863558cd
-
-## Créditos
-
-- **Desarrollador:** LeoniBres
-- **Frameworks:** Vue.js, Django REST Framework
-- **Diseño:** Inspirado en prácticas modernas de UX/UI
-<<<<<<< HEAD
-=======
-
----
->>>>>>> dda9d5c24eaf070dae3f7f3b7713f93e863558cd
+- **Correo**: contacto@leonibres.com
+- **Web**: https://leonibres.com

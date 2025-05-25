@@ -1,27 +1,46 @@
 # BeardStyle - Sistema Integral para Barberías
 
-BeardStyle es una solución web moderna para la gestión de barberías, desarrollada con **Vue.js** en el frontend y **Django REST Framework** en el backend. Permite a los usuarios registrarse, iniciar sesión, reservar y gestionar citas, y visualizar información relevante sobre los servicios ofrecidos.
+BeardStyle es una plataforma web moderna para la gestión de barberías, que permite a los usuarios reservar y gestionar citas, y a los administradores controlar servicios y usuarios. El sistema está compuesto por un backend robusto en Django REST Framework y un frontend atractivo en Vue.js.
 
 ---
 
 ## Tabla de Contenidos
 
-1. [Estructura del Proyecto](#estructura-del-proyecto)
-2. [Tecnologías Utilizadas](#tecnologías-utilizadas)
-3. [Requisitos del Sistema](#requisitos-del-sistema)
-4. [Guía Rápida: Cómo Iniciar el Backend y el Frontend](#guía-rápida-cómo-iniciar-el-backend-y-el-frontend)
-5. [Acceso a los Servidores](#acceso-a-los-servidores)
-6. [Documentación del Backend](#documentación-del-backend)
-7. [Documentación del Frontend](#documentación-del-frontend)
-8. [Documentación de la API](#documentación-de-la-api)
-9. [Resolución de Problemas](#resolución-de-problemas)
-10. [Contribuciones](#contribuciones)
-11. [Licencia](#licencia)
-12. [Contacto](#contacto)
+1. [Descripción General](#descripción-general)
+2. [Vista Previa](#vista-previa)
+3. [Estructura del Proyecto](#estructura-del-proyecto)
+4. [Tecnologías Utilizadas](#tecnologías-utilizadas)
+5. [Requisitos del Sistema](#requisitos-del-sistema)
+6. [Guía de Instalación y Ejecución](#guía-de-instalación-y-ejecución)
+7. [Acceso a los Servidores](#acceso-a-los-servidores)
+8. [Documentación del Backend](#documentación-del-backend)
+9. [Documentación del Frontend](#documentación-del-frontend)
+10. [Documentación de la API](#documentación-de-la-api)
+11. [Resolución de Problemas](#resolución-de-problemas)
+12. [Contribuciones](#contribuciones)
+13. [Licencia](#licencia)
+14. [Contacto](#contacto)
 
 ---
 
-## 1. Estructura del Proyecto
+## 1. Descripción General
+
+BeardStyle integra un backend seguro y escalable con Django REST Framework y un frontend SPA (Single Page Application) en Vue.js. Los usuarios pueden registrarse, iniciar sesión, reservar citas, y los administradores pueden gestionar servicios y usuarios desde un panel dedicado.
+
+---
+
+## 2. Vista Previa
+
+<p align="center">
+  <img src="frontend/public/assets/images/mi_imagen1.png" alt="Vista principal" width="600"/>
+</p>
+<p align="center">
+  <img src="frontend/public/assets/images/mi_imagen2.png" alt="Vista de citas" width="600"/>
+</p>
+
+---
+
+## 3. Estructura del Proyecto
 
 ```
 pagBeardStyle/
@@ -30,7 +49,7 @@ pagBeardStyle/
 │   ├── barbershop/           # Configuración del proyecto Django
 │   ├── manage.py             # Script de gestión Django
 │   ├── requirements.txt      # Dependencias Python
-│   └── API_README.md         # Documentación de la API
+│   └── API_README.md         # Documentación de la API REST
 ├── frontend/                 # Aplicación Vue.js
 │   ├── public/               # Archivos estáticos (CSS, imágenes)
 │   ├── src/                  # Código fuente Vue
@@ -51,17 +70,15 @@ pagBeardStyle/
 
 ---
 
-## 2. Tecnologías Utilizadas
+## 4. Tecnologías Utilizadas
 
 **Backend:**
-
 - Django 4.2+
 - Django REST Framework
 - SQLite (desarrollo) / PostgreSQL (producción)
 - Django CORS Headers
 
 **Frontend:**
-
 - Vue.js 3
 - Vue Router
 - Axios
@@ -70,7 +87,7 @@ pagBeardStyle/
 
 ---
 
-## 3. Requisitos del Sistema
+## 5. Requisitos del Sistema
 
 - **Python** 3.8+ (recomendado 3.12 o inferior para compatibilidad)
 - **Node.js** 14+
@@ -80,15 +97,14 @@ pagBeardStyle/
 
 ---
 
-## 4. Guía Rápida: Cómo Iniciar el Backend y el Frontend
+## 6. Guía de Instalación y Ejecución
 
-### Iniciar el Backend (Django)
+### Backend (Django)
 
 1. Abre una terminal y navega a la carpeta `backend`:
    ```bash
    cd backend
    ```
-
 2. Crea y activa el entorno virtual:
    ```bash
    python -m venv venv
@@ -97,39 +113,33 @@ pagBeardStyle/
    # En Linux/Mac:
    source venv/bin/activate
    ```
-
 3. Instala las dependencias:
    ```bash
    pip install -r requirements.txt
    ```
-
 4. Aplica migraciones:
    ```bash
    python manage.py migrate
    ```
-
 5. (Opcional) Crea un superusuario:
    ```bash
    python manage.py createsuperuser
    ```
-
 6. Inicia el servidor de desarrollo:
    ```bash
    python manage.py runserver
    ```
 
-### Iniciar el Frontend (Vue.js)
+### Frontend (Vue.js)
 
 1. Abre otra terminal y navega a la carpeta `frontend`:
    ```bash
    cd frontend
    ```
-
 2. Instala las dependencias:
    ```bash
    npm install
    ```
-
 3. Inicia el servidor de desarrollo:
    ```bash
    npm run serve
@@ -137,7 +147,7 @@ pagBeardStyle/
 
 ---
 
-## 5. Acceso a los Servidores
+## 7. Acceso a los Servidores
 
 - **Backend (Django):**  
   [http://localhost:8000](http://localhost:8000)  
@@ -148,37 +158,49 @@ pagBeardStyle/
 
 ---
 
-## 6. Documentación del Backend
+## 8. Documentación del Backend
 
-- Código fuente en `backend/barber_app/` y `backend/barbershop/`.
-- Configuración principal en `backend/barbershop/settings.py`.
-- Modelos, vistas, serializadores y rutas bien organizados y documentados.
-- Para más detalles técnicos, consulta `backend/API_README.md`.
-
----
-
-## 7. Documentación del Frontend
-
-- Código fuente en `frontend/src/`.
-- Estructura modular: componentes, layouts, secciones, servicios y rutas.
-- Uso de Vue Router para navegación y Axios para consumo de la API.
-- Estilos personalizados en `frontend/public/assets/css/styles.css`.
-- Para detalles de componentes y estructura, revisa los comentarios en cada archivo `.vue` y `.js`.
+- **Estructura:**  
+  - `barber_app/`: Modelos, vistas, serializadores y lógica de negocio.
+  - `barbershop/`: Configuración global del proyecto.
+- **Configuración:**  
+  - Variables de entorno recomendadas en `.env` (ver ejemplo en `API_README.md`).
+  - CORS y CSRF configurados para desarrollo seguro.
+- **Panel de administración:**  
+  - Gestiona usuarios, citas y servicios desde `/admin/`.
+- **Documentación extendida:**  
+  - Ver `backend/API_README.md` para detalles de modelos, endpoints y ejemplos.
 
 ---
 
-## 8. Documentación de la API
+## 9. Documentación del Frontend
 
-- Consulta el archivo [`backend/API_README.md`](backend/API_README.md) para:
-  - Modelos de datos
-  - Endpoints disponibles
+- **Estructura modular:**  
+  - Componentes reutilizables (`src/components/`), layouts (`src/layouts/`), secciones de landing (`src/sections/`), servicios API (`src/services/`), rutas (`src/router/`).
+- **Autenticación:**  
+  - Manejo de sesión y CSRF integrado con el backend.
+- **Estilos:**  
+  - Personalización en `public/assets/css/styles.css`.
+- **Desarrollo:**  
+  - Comentarios explicativos en los archivos `.vue` y `.js`.
+- **Variables de entorno:**  
+  - Configura la URL de la API en `.env.local` si es necesario.
+
+---
+
+## 10. Documentación de la API
+
+- **Referencia completa:**  
+  Consulta [`backend/API_README.md`](backend/API_README.md) para:
+  - Modelos de datos (`Usuario`, `Appointment`)
+  - Endpoints REST (registro, login, citas, etc.)
   - Ejemplos de peticiones y respuestas
   - Seguridad (CORS, CSRF, autenticación)
   - Guía de extensión y testing
 
 ---
 
-## 9. Resolución de Problemas
+## 11. Resolución de Problemas
 
 - **Error CSRF:**  
   Asegúrate de enviar el token CSRF en el header `X-CSRFToken` y que las cookies se envían correctamente.
@@ -193,7 +215,7 @@ pagBeardStyle/
 
 ---
 
-## 10. Contribuciones
+## 12. Contribuciones
 
 1. Haz un fork del repositorio.
 2. Crea una rama para tu feature.
@@ -203,13 +225,13 @@ pagBeardStyle/
 
 ---
 
-## 11. Licencia
+## 13. Licencia
 
 Este proyecto está bajo la Licencia MIT.
 
 ---
 
-## 12. Contacto
+## 14. Contacto
 
 - **Autor:** LeoniBres
 - **Email:** leonibresjimenez@gmail.com
@@ -217,12 +239,3 @@ Este proyecto está bajo la Licencia MIT.
 ¿Tienes sugerencias o encontraste un problema? ¡Contribuye o abre un issue!
 
 ---
-
-## Vista Previa
-
-<p align="center">
-  <img src="frontend/public/assets/images/mi_imagen1.png" alt="Vista principal" width="600"/>
-</p>
-<p align="center">
-  <img src="frontend/public/assets/images/mi_imagen2.png" alt="Vista de citas" width="600"/>
-</p>

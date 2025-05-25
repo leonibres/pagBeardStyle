@@ -9,17 +9,15 @@ BeardStyle es una solución web moderna para la gestión de barberías, desarrol
 1. [Estructura del Proyecto](#estructura-del-proyecto)
 2. [Tecnologías Utilizadas](#tecnologías-utilizadas)
 3. [Requisitos del Sistema](#requisitos-del-sistema)
-4. [Configuración y Ejecución](#configuración-y-ejecución)
-5. [Frontend: Estructura y Detalles](#frontend-estructura-y-detalles)
-6. [Backend: Estructura y API](#backend-estructura-y-api)
-7. [Integración Frontend-Backend](#integración-frontend-backend)
-8. [Autenticación y Seguridad](#autenticación-y-seguridad)
-9. [Gestión de Citas](#gestión-de-citas)
-10. [Panel de Administración y Superusuario](#panel-de-administración-y-superusuario)
-11. [Resolución de Problemas](#resolución-de-problemas)
-12. [Contribuciones](#contribuciones)
-13. [Licencia](#licencia)
-14. [Contacto](#contacto)
+4. [Guía Rápida: Cómo Iniciar el Backend y el Frontend](#guía-rápida-cómo-iniciar-el-backend-y-el-frontend)
+5. [Acceso a los Servidores](#acceso-a-los-servidores)
+6. [Documentación del Backend](#documentación-del-backend)
+7. [Documentación del Frontend](#documentación-del-frontend)
+8. [Documentación de la API](#documentación-de-la-api)
+9. [Resolución de Problemas](#resolución-de-problemas)
+10. [Contribuciones](#contribuciones)
+11. [Licencia](#licencia)
+12. [Contacto](#contacto)
 
 ---
 
@@ -48,7 +46,7 @@ pagBeardStyle/
 │   ├── .env.local            # Variables de entorno locales
 │   ├── package.json          # Dependencias JavaScript
 │   └── README.md             # Documentación frontend
-└── README.md                 # Este documento
+└── README.md                 # Este documento principal
 ```
 
 ---
@@ -57,7 +55,7 @@ pagBeardStyle/
 
 **Backend:**
 
-- Django 3.2+
+- Django 4.2+
 - Django REST Framework
 - SQLite (desarrollo) / PostgreSQL (producción)
 - Django CORS Headers
@@ -74,7 +72,7 @@ pagBeardStyle/
 
 ## 3. Requisitos del Sistema
 
-- **Python** 3.8+
+- **Python** 3.8+ (recomendado 3.12 o inferior para compatibilidad)
 - **Node.js** 14+
 - **npm** 6+ o yarn
 - Navegador moderno (Chrome, Firefox, Edge)
@@ -82,237 +80,120 @@ pagBeardStyle/
 
 ---
 
-## 4. Configuración y Ejecución
+## 4. Guía Rápida: Cómo Iniciar el Backend y el Frontend
 
-### Backend (Django)
+### Iniciar el Backend (Django)
 
-1. **Crear entorno virtual y activar:**
-
+1. Abre una terminal y navega a la carpeta `backend`:
    ```bash
    cd backend
+   ```
+
+2. Crea y activa el entorno virtual:
+   ```bash
    python -m venv venv
    # En Windows:
-   venv\Scripts\activate
+   .\venv\Scripts\activate
    # En Linux/Mac:
    source venv/bin/activate
    ```
 
-2. **Instalar dependencias:**
-
+3. Instala las dependencias:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Configurar variables de entorno** (opcional, recomendado):
-
-   - Crea un archivo `.env` en la carpeta `backend` con:
-     ```
-     DEBUG=True
-     SECRET_KEY=your-secret-key
-     DATABASE_URL=sqlite:///db.sqlite3
-     ALLOWED_HOSTS=localhost,127.0.0.1
-     CORS_ALLOWED_ORIGINS=http://localhost:8080,http://127.0.0.1:8080
-     ```
-
-4. **Aplicar migraciones:**
-
+4. Aplica migraciones:
    ```bash
    python manage.py migrate
    ```
 
-5. **Crear superusuario:**
-
+5. (Opcional) Crea un superusuario:
    ```bash
    python manage.py createsuperuser
    ```
 
-   **Clave recomendada para pruebas:**
-
-   - Usuario: `admin`
-   - Email: `admin@beardstyle.com`
-   - Contraseña: `Admin123456`
-
-6. **Ejecutar el servidor:**
+6. Inicia el servidor de desarrollo:
    ```bash
    python manage.py runserver
    ```
-   Acceso: [http://localhost:8000](http://localhost:8000)
 
----
+### Iniciar el Frontend (Vue.js)
 
-### Frontend (Vue.js)
-
-1. **Instalar dependencias:**
-
+1. Abre otra terminal y navega a la carpeta `frontend`:
    ```bash
    cd frontend
+   ```
+
+2. Instala las dependencias:
+   ```bash
    npm install
    ```
 
-2. **Configurar variables de entorno** (opcional):
-
-   - Crea un archivo `.env.local` en la carpeta `frontend`:
-     ```
-     VUE_APP_API_URL=http://localhost:8000/api
-     ```
-
-3. **Ejecutar el servidor de desarrollo:**
+3. Inicia el servidor de desarrollo:
    ```bash
    npm run serve
    ```
-   Acceso: [http://localhost:8080](http://localhost:8080)
 
 ---
 
-## 5. Frontend: Estructura y Detalles
+## 5. Acceso a los Servidores
 
-- **`src/components/`**: Componentes reutilizables (inputs, botones, tarjetas).
-- **`src/layouts/`**: Estructura global de la app (Header, Footer).
-- **`src/pages/`**: Páginas principales como gestión de citas.
-- **`src/views/`**: Vistas de autenticación (Login, Register) y gestión de citas.
-- **`src/sections/`**: Secciones de la landing page (Hero, Servicios, Testimonios).
-- **`src/services/`**: Servicios para consumir la API (auth, appointments).
-- **`src/composables/`**: Lógica reutilizable (ej. useAuth para estado de usuario).
-- **`src/router/`**: Configuración de rutas protegidas y públicas.
-- **`src/assets/`**: Imágenes, fuentes y estilos globales.
+- **Backend (Django):**  
+  [http://localhost:8000](http://localhost:8000)  
+  (Panel de administración: [http://localhost:8000/admin/](http://localhost:8000/admin/))
 
-**Ejemplo de flujo de autenticación:**
-
-- El usuario inicia sesión en `/login`.
-- El token de sesión y CSRF se almacenan en cookies.
-- El estado de usuario se mantiene en localStorage y composables.
-- Las rutas protegidas requieren autenticación y redirigen a `/login` si no hay sesión.
+- **Frontend (Vue.js):**  
+  [http://localhost:8080](http://localhost:8080)
 
 ---
 
-## 6. Backend: Estructura y API
+## 6. Documentación del Backend
 
-- **`barber_app/models.py`**: Define los modelos `Usuario` y `Appointment`.
-- **`barber_app/serializers.py`**: Serializadores para validar y transformar datos.
-- **`barber_app/views.py`**: Vistas API para registro, login, logout y gestión de citas.
-- **`barber_app/urls.py`**: Rutas de la API REST.
-- **`barbershop/settings.py`**: Configuración de base de datos, CORS, autenticación, etc.
-
-### Principales endpoints de la API
-
-- **Registro:** `POST /api/auth/register/`
-- **Login:** `POST /api/auth/login/`
-- **Logout:** `POST /api/auth/logout/`
-- **Listar/Crear citas:** `GET/POST /api/appointments/`
-- **Mis citas:** `GET /api/appointments/my/`
-- **Detalle/Editar/Eliminar cita:** `GET/PUT/DELETE /api/appointments/{id}/`
-
-**Ejemplo de creación de cita:**
-
-```json
-POST /api/appointments/
-{
-  "date": "2023-06-25T14:00:00Z",
-  "service": "Corte y Barba",
-  "status": "pendiente"
-}
-```
-
-**Respuesta exitosa:**
-
-```json
-{
-  "id": 3,
-  "user": 1,
-  "date": "2023-06-25T14:00:00Z",
-  "service": "Corte y Barba",
-  "status": "pendiente",
-  "created_at": "2023-06-16T09:20:00Z"
-}
-```
-
-**Notas:**
-
-- El usuario debe estar autenticado (cookie de sesión activa).
-- El token CSRF debe enviarse en el header `X-CSRFToken` para métodos POST/PUT/DELETE.
-- El backend valida que el usuario solo pueda ver y modificar sus propias citas.
+- Código fuente en `backend/barber_app/` y `backend/barbershop/`.
+- Configuración principal en `backend/barbershop/settings.py`.
+- Modelos, vistas, serializadores y rutas bien organizados y documentados.
+- Para más detalles técnicos, consulta `backend/API_README.md`.
 
 ---
 
-## 7. Integración Frontend-Backend
+## 7. Documentación del Frontend
 
-La comunicación se realiza mediante Axios, configurado para enviar cookies y el token CSRF en cada petición protegida.
-
-**Ejemplo de configuración base de Axios:**
-
-```js
-// src/services/api.js
-import axios from "axios";
-const apiClient = axios.create({
-  baseURL: process.env.VUE_APP_API_URL,
-  withCredentials: true,
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  },
-});
-apiClient.interceptors.request.use((config) => {
-  const csrfToken = getCookie("csrftoken");
-  if (csrfToken) config.headers["X-CSRFToken"] = csrfToken;
-  return config;
-});
-export default apiClient;
-```
+- Código fuente en `frontend/src/`.
+- Estructura modular: componentes, layouts, secciones, servicios y rutas.
+- Uso de Vue Router para navegación y Axios para consumo de la API.
+- Estilos personalizados en `frontend/public/assets/css/styles.css`.
+- Para detalles de componentes y estructura, revisa los comentarios en cada archivo `.vue` y `.js`.
 
 ---
 
-## 8. Autenticación y Seguridad
+## 8. Documentación de la API
 
-- **Autenticación por sesión:**  
-  El backend usa cookies de sesión (`sessionid`) y protección CSRF (`csrftoken`).
-- **CORS:**  
-  Configurado para aceptar solo orígenes permitidos.
-- **Contraseñas:**  
-  Hasheadas en la base de datos.
-- **Validación:**  
-  Validación de datos tanto en frontend como en backend.
+- Consulta el archivo [`backend/API_README.md`](backend/API_README.md) para:
+  - Modelos de datos
+  - Endpoints disponibles
+  - Ejemplos de peticiones y respuestas
+  - Seguridad (CORS, CSRF, autenticación)
+  - Guía de extensión y testing
 
 ---
 
-## 9. Gestión de Citas
-
-- **Crear cita:**  
-  POST a `/api/appointments/` con los campos `date`, `service`, `status`.
-- **Listar citas:**  
-  GET a `/api/appointments/` o `/api/appointments/my/`.
-- **Editar/Eliminar cita:**  
-  PUT/DELETE a `/api/appointments/{id}/`.
-
----
-
-## 10. Panel de Administración y Superusuario
-
-- Acceso: [http://localhost:8000/admin/](http://localhost:8000/admin/)
-- Gestiona usuarios, citas y servicios desde la interfaz de Django Admin.
-- **Credenciales de superusuario por defecto para pruebas:**
-  - Usuario: `admin`
-  - Email: `admin@beardstyle.com`
-  - Contraseña: `Admin123456`
-- **Importante:** Cambia estas credenciales en producción.
-
----
-
-## 11. Resolución de Problemas
+## 9. Resolución de Problemas
 
 - **Error CSRF:**  
-  Verifica que el token CSRF se envía en el header `X-CSRFToken` y que las cookies se envían correctamente.
+  Asegúrate de enviar el token CSRF en el header `X-CSRFToken` y que las cookies se envían correctamente.
 - **401 Unauthorized:**  
-  Asegúrate de que la sesión esté activa.
+  Verifica que la sesión esté activa y que el usuario esté autenticado.
 - **CORS:**  
-  Verifica que el origen del frontend esté en `CORS_ALLOWED_ORIGINS`.
-- **500 Internal Server Error:**  
-  Revisa los logs del backend para detalles.
+  Confirma que el origen del frontend esté en `CORS_ALLOWED_ORIGINS` en el backend.
+- **Problemas con dependencias:**  
+  Usa Python 3.12 o inferior para evitar incompatibilidades con algunos paquetes.
 - **Citas no aparecen:**  
-  Verifica que el usuario esté autenticado y que la petición API sea correcta.
+  Verifica autenticación y revisa la consola del navegador y los logs del backend.
 
 ---
 
-## 12. Contribuciones
+## 10. Contribuciones
 
 1. Haz un fork del repositorio.
 2. Crea una rama para tu feature.
@@ -322,13 +203,13 @@ export default apiClient;
 
 ---
 
-## 13. Licencia
+## 11. Licencia
 
 Este proyecto está bajo la Licencia MIT.
 
 ---
 
-## 14. Contacto
+## 12. Contacto
 
 - **Autor:** LeoniBres
 - **Email:** leonibresjimenez@gmail.com

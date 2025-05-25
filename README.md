@@ -6,20 +6,20 @@ BeardStyle es una plataforma web moderna para la gestión de barberías, que per
 
 ## Tabla de Contenidos
 
-1. [Descripción General](#descripción-general)
-2. [Vista Previa](#vista-previa)
-3. [Estructura del Proyecto](#estructura-del-proyecto)
-4. [Tecnologías Utilizadas](#tecnologías-utilizadas)
-5. [Requisitos del Sistema](#requisitos-del-sistema)
-6. [Guía de Instalación y Ejecución](#guía-de-instalación-y-ejecución)
-7. [Acceso a los Servidores](#acceso-a-los-servidores)
-8. [Documentación del Backend](#documentación-del-backend)
-9. [Documentación del Frontend](#documentación-del-frontend)
-10. [Documentación de la API](#documentación-de-la-api)
-11. [Resolución de Problemas](#resolución-de-problemas)
-12. [Contribuciones](#contribuciones)
-13. [Licencia](#licencia)
-14. [Contacto](#contacto)
+- [1. Descripción General](#1-descripción-general)
+- [2. Vista Previa](#2-vista-previa)
+- [3. Estructura del Proyecto](#3-estructura-del-proyecto)
+- [4. Tecnologías Utilizadas](#4-tecnologías-utilizadas)
+- [5. Requisitos del Sistema](#5-requisitos-del-sistema)
+- [6. Guía de Instalación y Ejecución](#6-guía-de-instalación-y-ejecución)
+- [7. Acceso a los Servidores](#7-acceso-a-los-servidores)
+- [8. Documentación del Backend](#8-documentación-del-backend)
+- [9. Documentación del Frontend](#9-documentación-del-frontend)
+- [10. Documentación de la API](#10-documentación-de-la-api)
+- [11. Resolución de Problemas](#11-resolución-de-problemas)
+- [12. Contribuciones](#12-contribuciones)
+- [13. Licencia](#13-licencia)
+- [14. Contacto](#14-contacto)
 
 ---
 

@@ -217,3 +217,12 @@ Este proyecto está bajo la Licencia MIT.
 ¿Tienes sugerencias o encontraste un problema? ¡Contribuye o abre un issue!
 
 ---
+
+## Vista Previa
+
+<p align="center">
+  <img src="frontend/public/assets/images/mi_imagen1.png" alt="Vista principal" width="600"/>
+</p>
+<p align="center">
+  <img src="frontend/public/assets/images/mi_imagen2.png" alt="Vista de citas" width="600"/>
+</p>

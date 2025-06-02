@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "server": "npm run serve"
+    "server": "npm run serve",
+    "test:unit": "jest"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
@@ -24,12 +25,16 @@
     "@vue/cli-plugin-eslint": "^5.0.8",
     "@vue/cli-service": "^5.0.8",
     "@vue/compiler-sfc": "^3.5.13",
+    "@vue/test-utils": "^2.4.0-alpha.2",
     "babel-eslint": "^10.1.0",
+    "babel-jest": "^26.6.3",
     "eslint": "^7.5.0",
     "eslint-plugin-vue": "^7.0.0",
+    "jest": "^26.6.3",
     "path-browserify": "^1.0.1",
     "sass": "^1.87.0",
     "sass-loader": "^10.5.2",
+    "vue-jest": "^5.0.0-alpha.10",
     "webpack": "^5.99.7"
   },
   "eslintConfig": {
